@@ -10,16 +10,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dark-purple: #1a0b2e;
-            --primary-purple: #7f56d9;
-            --light-purple: #a78bfa;
-            --glass-bg: rgba(45, 23, 76, 0.3);
+            --dark-blue: #0A192F;
+            --primary-blue: #38BDF8;
+            --light-blue: #7DD3FC;
+            --glass-bg: rgba(23, 37, 62, 0.3);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--dark-purple);
+            background-color: var(--dark-blue);
             color: #e2e8f0;
             overflow-x: hidden;
         }
@@ -27,11 +27,11 @@
         /* DYNAMIC LIQUID BACKGROUND */
         #liquid-cursor {
             position: fixed;
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(167, 139, 250, 0.25), transparent 60%);
-            filter: blur(100px);
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15), transparent 60%);
+            filter: blur(120px);
             z-index: -1;
             pointer-events: none;
             transition: transform 0.2s ease-out;
@@ -40,31 +40,44 @@
         /* GLASSMORPHISM CARD STYLE */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
             border: 1px solid var(--glass-border);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .glass-card-hover:hover {
-            border-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
         
+        /* PORTFOLIO CARD HOVER EFFECT */
+        .portfolio-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border-radius: inherit;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.1), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .portfolio-card:hover::before { opacity: 1; }
+
         /* SCROLLBAR */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--dark-purple); }
-        ::-webkit-scrollbar-thumb { background: rgba(127, 86, 217, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: var(--dark-blue); }
+        ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 10px; }
 
         /* HERO VIDEO BACKGROUND */
         #hero-video-bg {
             position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
             object-fit: cover; transform: translate(-50%, -50%); z-index: -1;
-            filter: blur(15px) brightness(0.4); opacity: 0.5;
+            filter: blur(15px) brightness(0.3); opacity: 0.6;
         }
 
         /* ENTRANCE ANIMATIONS */
-        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 1s, transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
         
         /* CAROUSEL */
@@ -72,15 +85,16 @@
         .carousel-item { scroll-snap-align: center; }
 
         /* MODAL ANIMATION */
-        .modal-content { animation: modal-swoop 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+        .modal-content { animation: modal-swoop 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes modal-swoop {
-            from { opacity: 0; transform: translateY(50px) scale(0.95); }
+            from { opacity: 0; transform: translateY(50px) scale(0.9); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
         
         /* WHATSAPP BUTTON LIQUID EFFECT */
-        .whatsapp-button svg { animation: liquid-wave 3s infinite; }
-        @keyframes liquid-wave { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .whatsapp-button { position: relative; overflow: hidden; }
+        .whatsapp-button span { position: absolute; border-radius: 50%; background: white; transform: scale(0); animation: ripple 0.6s linear; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
     </style>
 </head>
 <body class="min-h-screen">
@@ -91,14 +105,16 @@
         <div class="container mx-auto max-w-7xl">
             <div class="glass-card flex justify-between items-center rounded-2xl px-6 py-3">
                 <a href="#" class="flex items-center gap-3">
-                    <svg width="28" height="28" viewBox="0 0 24 24" class="text-purple-400">
-                        <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(-1px); filter: drop-shadow(-1px 0 0 #a78bfa)"/>
-                        <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(1px); filter: drop-shadow(1px 0 0 #4f46e5)"/>
-                        <path d="M7 4v16l13-8L7 4z" fill="rgba(224, 212, 255, 0.8)"/>
-                    </svg>
+                    <div class="w-8 h-8 flex items-center justify-center">
+                        <svg width="28" height="28" viewBox="0 0 24 24" class="text-sky-300">
+                            <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(-1px); filter: drop-shadow(-1px 0 0 #38BDF8)"/>
+                            <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(1px); filter: drop-shadow(1px 0 0 #0284C7)"/>
+                            <path d="M7 4v16l13-8L7 4z" fill="rgba(224, 242, 254, 0.8)"/>
+                        </svg>
+                    </div>
                     <span class="text-xl font-bold text-white tracking-tight">ru4nedits</span>
                 </a>
-                <nav class="hidden md:flex items-center gap-6 text-purple-200">
+                <nav class="hidden md:flex items-center gap-6 text-sky-200">
                     <a href="#sobre" class="hover:text-white transition">Sobre</a>
                     <a href="#portfolio" class="hover:text-white transition">Portfólio</a>
                     <a href="#depoimentos" class="hover:text-white transition">Depoimentos</a>
@@ -110,15 +126,15 @@
     <main>
         <!-- HERO SECTION -->
         <section class="relative min-h-screen flex items-center justify-center text-center p-4 overflow-hidden">
-            <video id="hero-video-bg" playsinline autoplay muted loop src="https://cdn.pixabay.com/video/2024/05/29/213239_large.mp4"></video>
+            <video id="hero-video-bg" playsinline autoplay muted loop src="https://cdn.pixabay.com/video/2022/10/24/135242-763458793_large.mp4"></video>
             <div class="relative z-10 glass-card rounded-3xl p-8 max-w-4xl reveal">
-                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white to-purple-300">
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white to-sky-300">
                     Edições que transformam. Histórias que conectam.
                 </h1>
-                <p class="mt-6 max-w-2xl mx-auto text-lg text-purple-200">
+                <p class="mt-6 max-w-2xl mx-auto text-lg text-sky-200">
                     Transformo vídeos brutos em narrativas impactantes que capturam a atenção e geram resultados.
                 </p>
-                <a href="#portfolio" class="mt-8 inline-block bg-purple-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-purple-500/30 transition-transform transform hover:scale-105 hover:bg-purple-500">
+                <a href="#portfolio" class="mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-sky-500/30 transition-all transform hover:scale-105 hover:bg-sky-400">
                     Veja meu portfólio
                 </a>
             </div>
@@ -129,16 +145,16 @@
             <div class="glass-card rounded-3xl p-12 reveal">
                 <div class="flex flex-col md:flex-row items-center gap-12">
                     <div class="glass-card rounded-full p-2">
-                        <div class="bg-purple-900 rounded-full w-32 h-32 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-purple-300"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                        <div class="bg-blue-900/50 rounded-full w-32 h-32 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-sky-300"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
                         </div>
                     </div>
                     <div class="text-left">
                         <h2 class="text-4xl font-bold text-white">Especialista em dar vida às suas ideias.</h2>
-                        <p class="mt-4 text-purple-200">Com foco em storytelling e precisão técnica, meu trabalho é garantir que cada frame cumpra um propósito: engajar, emocionar e converter.</p>
+                        <p class="mt-4 text-sky-200">Com foco em storytelling e precisão técnica, meu trabalho é garantir que cada frame cumpra um propósito: engajar, emocionar e converter.</p>
                         <div class="mt-6 flex gap-8">
-                            <div><span class="text-3xl font-bold text-purple-400">+10M</span><p class="text-sm text-purple-200">Visualizações geradas</p></div>
-                            <div><span class="text-3xl font-bold text-purple-400">+50</span><p class="text-sm text-purple-200">Projetos entregues</p></div>
+                            <div><span data-target="10" class="animated-stat text-3xl font-bold text-sky-400">0</span><span class="text-3xl font-bold text-sky-400">M+</span><p class="text-sm text-sky-200">Visualizações geradas</p></div>
+                            <div><span data-target="100" class="animated-stat text-3xl font-bold text-sky-400">0</span><span class="text-3xl font-bold text-sky-400">+</span><p class="text-sm text-sky-200">Projetos entregues</p></div>
                         </div>
                     </div>
                 </div>
@@ -149,7 +165,7 @@
         <section id="portfolio" class="container mx-auto max-w-7xl py-24 px-4">
             <div class="text-center mb-12 reveal">
                 <h2 class="text-5xl font-bold text-white">Portfólio</h2>
-                <p class="mt-4 text-lg text-purple-200">Uma amostra do meu trabalho em ação.</p>
+                <p class="mt-4 text-lg text-sky-200">Uma amostra do meu trabalho em ação.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Portfolio items will be injected by JS -->
@@ -160,7 +176,7 @@
         <section id="depoimentos" class="py-24">
             <div class="text-center mb-12 reveal">
                 <h2 class="text-5xl font-bold text-white">O que meus clientes dizem</h2>
-                <p class="mt-4 text-lg text-purple-200">Resultados que falam por si.</p>
+                <p class="mt-4 text-lg text-sky-200">Resultados que falam por si.</p>
             </div>
             <div class="relative max-w-7xl mx-auto reveal">
                 <div class="carousel-container flex overflow-x-auto snap-x snap-mandatory gap-8 px-4 pb-8">
@@ -174,51 +190,31 @@
     <a href="https://wa.me/5588996117377" target="_blank" class="whatsapp-button fixed bottom-6 right-6 z-50 bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.267.655 4.398 1.908 6.161l.114.162-1.217 4.459 4.569-1.195.163.097z"/></svg>
     </a>
-    <button id="feedback-fab" class="fixed bottom-28 right-6 z-50 bg-purple-600 text-white px-4 py-3 rounded-full shadow-lg transform transition-transform hover:scale-105">
-        Quer ver como ficaria seu vídeo?
-    </button>
     
     <!-- MODALS -->
     <div id="portfolio-modal" class="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4 hidden">
         <div class="modal-content glass-card rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 relative">
-            <button class="modal-close-btn absolute top-4 right-4 text-white text-3xl hover:text-purple-300">&times;</button>
+            <button class="modal-close-btn absolute top-4 right-4 text-white text-3xl hover:text-sky-300">&times;</button>
             <div class="aspect-video mb-4 rounded-lg overflow-hidden bg-black"><iframe id="modal-video" class="w-full h-full" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
             <h3 id="modal-title" class="text-2xl font-bold text-white mb-2"></h3>
-            <p id="modal-description" class="text-purple-200"></p>
+            <p id="modal-description" class="text-sky-200"></p>
             <div class="mt-4">
                 <h4 class="font-semibold text-white">Antes e Depois (Simulação)</h4>
                 <div class="flex gap-4 mt-2">
                     <div class="w-1/2 bg-slate-800 rounded-md p-4 text-center text-slate-400">[Frame "Antes" - Sem cor e cortes]</div>
-                    <div class="w-1/2 bg-purple-900 rounded-md p-4 text-center text-purple-200">[Frame "Depois" - Corrigido e estilizado]</div>
+                    <div class="w-1/2 bg-blue-900/30 rounded-md p-4 text-center text-sky-200">[Frame "Depois" - Corrigido e estilizado]</div>
                 </div>
             </div>
         </div>
     </div>
     
-    <div id="feedback-modal" class="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4 hidden">
-        <div class="modal-content glass-card rounded-2xl w-full max-w-md p-8 relative">
-            <button class="modal-close-btn absolute top-4 right-4 text-white text-3xl hover:text-purple-300">&times;</button>
-            <div id="feedback-form-content">
-                <h3 class="text-2xl font-bold text-white mb-2">Receba uma prévia IA</h3>
-                <p class="text-purple-200 mb-6">Cole o link do seu vídeo (YouTube, Drive, etc.) e veja uma simulação de como ele poderia ficar.</p>
-                <input id="video-link-input" type="text" placeholder="https://seu-video.com/link" class="w-full bg-purple-900/50 border border-purple-400/50 rounded-lg px-4 py-2 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-purple-400">
-                <button id="submit-feedback" class="mt-4 w-full bg-purple-600 text-white font-semibold py-3 rounded-full hover:bg-purple-500 transition">Gerar Prévia</button>
-            </div>
-            <div id="feedback-preview-content" class="hidden text-center">
-                 <h3 class="text-2xl font-bold text-white mb-4">Analisando seu vídeo...</h3>
-                 <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-400 mx-auto"></div>
-                 <p class="text-purple-200 mt-4">Nossa IA está aplicando as melhores técnicas de edição. Isso pode levar um momento.</p>
-            </div>
-        </div>
-    </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // --- DATA ---
     const portfolioData = [
         { id: 'kX1_rmdGhe4', title: 'Head de Tráfego', description: 'Edição dinâmica com foco em conversão, utilizando motion graphics e cortes rápidos para prender a atenção do espectador.' },
-        { id: 'gMDAMt-tFo4', title: 'Vídeo Curto Dinâmico', description: 'Projeto focado em redes sociais, com legendas estilizadas e efeitos sonoros para maximizar o engajamento em vídeos curtos.' },
-        { id: 'A9uGJAtHZ3U', title: 'Reel Vertical', description: 'Adaptação de conteúdo para o formato vertical, otimizando o enquadramento e adicionando elementos gráficos que funcionam melhor em stories e reels.' },
+        { id: 'gMDAMt-tFo4', title: 'Vídeo Curto Dinâmico', description: 'Projeto focado em redes sociais, com legendas estilizadas e efeitos sonoros para maximizar o engajamento.' },
+        { id: 'A9uGJAtHZ3U', title: 'Reel Vertical', description: 'Adaptação de conteúdo para o formato vertical, otimizando o enquadramento e adicionando elementos gráficos.' },
         { id: 'fzYXEga_wnE', title: 'Alerta de Golpe', description: 'Vídeo informativo com ritmo acelerado para criar um senso de urgência e clareza na mensagem.' },
         { id: '5bCEZgA11T0', title: 'Importância do Advogado', description: 'Edição sóbria e profissional, focada em transmitir autoridade e confiança através de transições suaves.' },
         { id: 'Bh-6eIgu83U', title: 'Apresentação de App', description: 'Vídeo de apresentação de produto, combinando captura de tela com animações para explicar funcionalidades.' },
@@ -233,9 +229,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const portfolioGrid = document.querySelector('#portfolio .grid');
     portfolioData.forEach((item, index) => {
         const card = document.createElement('div');
-        card.className = 'reveal glass-card rounded-2xl overflow-hidden glass-card-hover cursor-pointer';
+        card.className = 'reveal portfolio-card relative glass-card rounded-2xl overflow-hidden glass-card-hover cursor-pointer';
         card.style.transitionDelay = `${index * 100}ms`;
-        card.innerHTML = `<img src="https://i.ytimg.com/vi/${item.id}/hqdefault.jpg" alt="${item.title}" class="w-full h-48 object-cover"><div class="p-4"><h3 class="font-bold text-white text-lg">${item.title}</h3><p class="text-sm text-purple-300 mt-1">Clique para ver detalhes</p></div>`;
+        card.innerHTML = `<img src="https://i.ytimg.com/vi/${item.id}/hqdefault.jpg" alt="${item.title}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"><div class="p-4"><h3 class="font-bold text-white text-lg">${item.title}</h3><p class="text-sm text-sky-300 mt-1">Clique para ver detalhes</p></div>`;
         card.addEventListener('click', () => openModal('portfolio-modal', item));
         portfolioGrid.appendChild(card);
     });
@@ -243,15 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
     testimonialsData.forEach(item => {
         const card = document.createElement('div');
         card.className = 'carousel-item flex-shrink-0 w-[80%] md:w-[45%]';
-        card.innerHTML = `<div class="glass-card rounded-2xl p-8 h-full"><p class="text-purple-200 italic">“${item.feedback}”</p><div class="mt-4 text-right"><p class="font-bold text-white">${item.name}</p><p class="text-sm text-purple-300">${item.company}</p></div></div>`;
+        card.innerHTML = `<div class="glass-card rounded-2xl p-8 h-full glass-card-hover"><p class="text-sky-200 italic">“${item.feedback}”</p><div class="mt-4 text-right"><p class="font-bold text-white">${item.name}</p><p class="text-sm text-sky-300">${item.company}</p></div></div>`;
         carouselContainer.appendChild(card);
     });
 
     // --- MODAL LOGIC ---
     const portfolioModal = document.getElementById('portfolio-modal');
-    const feedbackModal = document.getElementById('feedback-modal');
-    const feedbackFab = document.getElementById('feedback-fab');
-    const submitFeedbackBtn = document.getElementById('submit-feedback');
 
     function openModal(modalId, data) {
         const modal = document.getElementById(modalId);
@@ -269,26 +262,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         modal.classList.add('hidden');
     }
-    document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', () => {
-        closeModal(btn.closest('.fixed').id);
-    }));
-    [portfolioModal, feedbackModal].forEach(modal => modal.addEventListener('click', e => {
-        if (e.target === modal) closeModal(modal.id);
-    }));
-    feedbackFab.addEventListener('click', () => openModal('feedback-modal'));
-    submitFeedbackBtn.addEventListener('click', () => {
-        const form = document.getElementById('feedback-form-content');
-        const preview = document.getElementById('feedback-preview-content');
-        form.classList.add('hidden');
-        preview.classList.remove('hidden');
-        setTimeout(() => {
-            // Simulação: Após 3 segundos, exibe um alerta e reseta o formulário
-            alert('Prévia gerada! (Simulação)\nSua versão otimizada teria melhor cor, cortes dinâmicos e som impactante.');
-            closeModal('feedback-modal');
-            form.classList.remove('hidden');
-            preview.classList.add('hidden');
-            document.getElementById('video-link-input').value = '';
-        }, 3000);
+    document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.fixed').id)));
+    portfolioModal.addEventListener('click', e => {
+        if (e.target === portfolioModal) closeModal(portfolioModal.id);
     });
 
     // --- REVEAL ON SCROLL ---
@@ -296,20 +272,56 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
+                const animatedStat = entry.target.querySelector('.animated-stat');
+                if (animatedStat) animateStat(animatedStat);
                 revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.2 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     
-    // --- DYNAMIC LIQUID CURSOR ---
+    // --- ANIMATED STATS ---
+    function animateStat(element) {
+        const target = +element.dataset.target;
+        let count = 0;
+        const duration = 1500;
+        const stepTime = Math.abs(Math.floor(duration / target));
+        const timer = setInterval(() => {
+            count++;
+            element.innerText = count;
+            if (count === target) clearInterval(timer);
+        }, stepTime);
+    }
+    
+    // --- DYNAMIC INTERACTIONS ---
     const liquidCursor = document.getElementById('liquid-cursor');
     window.addEventListener('mousemove', e => {
-        liquidCursor.style.transform = `translate(${e.clientX - 250}px, ${e.clientY - 250}px)`;
+        liquidCursor.style.transform = `translate(${e.clientX - 300}px, ${e.clientY - 300}px)`;
+    });
+    
+    document.querySelectorAll('.portfolio-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+
+    document.querySelector('.whatsapp-button').addEventListener('click', function(e) {
+        let ripple = document.createElement("span");
+        this.appendChild(ripple);
+        let x = e.clientX - e.target.offsetLeft;
+        let y = e.clientY - e.target.offsetTop;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        setTimeout(() => { ripple.remove(); }, 600);
     });
 });
 </script>
 
 </body>
 </html>
+
 
