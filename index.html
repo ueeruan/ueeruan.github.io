@@ -16,13 +16,17 @@
             --light-blue: #7DD3FC;
             --glass-bg: rgba(23, 37, 62, 0.3);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #e2e8f0;
+            --text-muted-color: #94a3b8;
         }
+
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--dark-blue);
-            color: #e2e8f0;
+            color: var(--text-color);
             overflow-x: hidden;
+            transition: background-color 0.5s, color 0.5s;
         }
 
         /* DYNAMIC LIQUID BACKGROUND & PARALLAX */
@@ -66,6 +70,7 @@
         }
         
         /* PORTFOLIO CARD HOVER EFFECT */
+        .portfolio-card { will-change: transform; }
         .portfolio-card::before {
             content: '';
             position: absolute;
@@ -119,6 +124,14 @@
             transform: translateY(0);
         }
 
+        /* MINI JOGO */
+        .draggable { touch-action: none; }
+        #minigame-timeline { min-height: 80px; }
+        .game-element { transition: background-color 0.3s; }
+        .game-element.dragging { opacity: 0.5; }
+        .timeline-item { animation: pop-in 0.3s ease; }
+        @keyframes pop-in { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
     </style>
 </head>
 <body class="min-h-screen">
@@ -143,6 +156,7 @@
                 <nav class="hidden md:flex items-center gap-6 text-sky-200">
                     <a href="#sobre" class="nav-link hover:text-white transition">Sobre</a>
                     <a href="#portfolio" class="nav-link hover:text-white transition">Portfólio</a>
+                    <a href="#minijogo" class="nav-link hover:text-white transition">Interativo</a>
                     <a href="#depoimentos" class="nav-link hover:text-white transition">Depoimentos</a>
                 </nav>
             </div>
@@ -224,6 +238,36 @@
             </div>
         </section>
 
+        <!-- MINI JOGO SECTION -->
+        <section id="minijogo" class="container mx-auto max-w-5xl py-24 px-4">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-5xl font-bold text-white">Construa seu Mini Vídeo</h2>
+                <p class="mt-4 text-lg text-sky-200">Arraste os elementos para a timeline e veja a mágica acontecer.</p>
+            </div>
+            <div class="glass-card rounded-3xl p-8 md:p-12 reveal">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div id="minigame-elements" class="md:col-span-1 flex flex-col gap-4">
+                        <div draggable="true" class="draggable game-element glass-card p-4 rounded-lg cursor-grab active:cursor-grabbing" data-type="text">✏️ Texto Impactante</div>
+                        <div draggable="true" class="draggable game-element glass-card p-4 rounded-lg cursor-grab active:cursor-grabbing" data-type="effect">✨ Efeito Glitch</div>
+                        <div draggable="true" class="draggable game-element glass-card p-4 rounded-lg cursor-grab active:cursor-grabbing" data-type="transition">🎬 Transição Rápida</div>
+                        <div draggable="true" class="draggable game-element glass-card p-4 rounded-lg cursor-grab active:cursor-grabbing" data-type="sound">🔊 Efeito Sonoro</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div id="minigame-player" class="glass-card rounded-xl aspect-video w-full flex items-center justify-center text-2xl text-sky-300/50 relative overflow-hidden">
+                            <span>Player</span>
+                        </div>
+                        <div id="minigame-timeline" class="glass-card rounded-xl mt-4 p-4 flex items-center gap-2 flex-wrap border-dashed border-2 border-sky-500/30">
+                            <span class="text-sky-400/50">Arraste aqui</span>
+                        </div>
+                         <div class="flex justify-end gap-4 mt-4">
+                             <button id="clear-timeline-btn" class="glass-card-hover py-2 px-4 rounded-lg">Limpar</button>
+                            <button id="play-timeline-btn" class="bg-sky-500 text-white font-semibold py-2 px-6 rounded-lg shadow-lg shadow-sky-500/30 transition-all transform hover:scale-105 hover:bg-sky-400">Play</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- DEPOIMENTOS SECTION -->
         <section id="depoimentos" class="py-24">
             <div class="text-center mb-12 reveal">
@@ -286,15 +330,15 @@ document.addEventListener('DOMContentLoaded', () => {
         pop: new Tone.PolySynth(Tone.Synth, {
             oscillator: { type: 'sine' },
             envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.4 },
-            volume: -20
+            volume: -26 // Volume decreased
         }).toDestination(),
         glitch: new Tone.PolySynth(Tone.NoiseSynth, {
             noise: { type: 'pink' },
             envelope: { attack: 0.001, decay: 0.05, sustain: 0 },
-            volume: -15
+            volume: -21 // Volume decreased
         }).toDestination(),
         swipe: new Tone.PolySynth(Tone.MembraneSynth, {
-             pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.0006, decay: 0.5, sustain: 0 }, volume: -10
+             pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.0006, decay: 0.5, sustain: 0 }, volume: -16 // Volume decreased
         }).toDestination()
     };
     
@@ -342,7 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- MODAL LOGIC ---
     const portfolioModal = document.getElementById('portfolio-modal');
-    
     function openModal(modalId, data) {
         const modal = document.getElementById(modalId);
         if (modalId === 'portfolio-modal' && data) {
@@ -362,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === portfolioModal) closeModal(portfolioModal.id);
     });
 
-    // --- REVEAL ON SCROLL ---
+    // --- REVEAL ON SCROLL & SCROLL REACTIONS ---
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -375,6 +418,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.2 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        document.body.style.setProperty('--scroll-y', scrollY);
+    });
+
     // --- ANIMATED STATS ---
     function animateStat(element) {
         const target = +element.dataset.target;
@@ -388,14 +436,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }, stepTime);
     }
     
-    // --- DYNAMIC INTERACTIONS ---
+    // --- DYNAMIC INTERACTIONS (PARALLAX) ---
     const parallaxLayers = document.querySelectorAll('.parallax-layer');
     window.addEventListener('mousemove', e => {
         const x = e.clientX - window.innerWidth / 2;
         const y = e.clientY - window.innerHeight / 2;
-        parallaxLayers[0].style.transform = `translate(${x / 20}px, ${y / 20}px)`; // Liquid Cursor
-        parallaxLayers[1].style.transform = `translate(${x / 80}px, ${y / 80}px)`; // Farthest
-        parallaxLayers[2].style.transform = `translate(${x / 40}px, ${y / 40}px)`; // Closest
+
+        parallaxLayers[0].style.transform = `translate(${x / 20}px, ${y / 20}px)`;
+        parallaxLayers[1].style.transform = `translate(${x / 80}px, ${y / 80}px)`;
+        parallaxLayers[2].style.transform = `translate(${x / 40}px, ${y / 40}px)`;
     });
     
     document.querySelectorAll('.portfolio-card').forEach(card => {
@@ -458,6 +507,91 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+    
+    // --- MINI JOGO LOGIC ---
+    const draggables = document.querySelectorAll('.draggable');
+    const timeline = document.getElementById('minigame-timeline');
+    const player = document.getElementById('minigame-player');
+    const playBtn = document.getElementById('play-timeline-btn');
+    const clearBtn = document.getElementById('clear-timeline-btn');
+    let timelineItems = [];
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', () => {
+            draggable.classList.add('dragging');
+        });
+        draggable.addEventListener('dragend', () => {
+            draggable.classList.remove('dragging');
+        });
+    });
+
+    timeline.addEventListener('dragover', e => {
+        e.preventDefault();
+        timeline.classList.add('bg-sky-500/10');
+    });
+    
+    timeline.addEventListener('dragleave', () => {
+        timeline.classList.remove('bg-sky-500/10');
+    });
+
+    timeline.addEventListener('drop', e => {
+        e.preventDefault();
+        timeline.classList.remove('bg-sky-500/10');
+        const dragging = document.querySelector('.dragging');
+        if (dragging) {
+            const type = dragging.dataset.type;
+            const text = dragging.innerText;
+            timelineItems.push({ type, text });
+            renderTimeline();
+            if(Tone.context.state === 'running') sounds.pop.triggerAttackRelease("E4", "8n");
+        }
+    });
+    
+    function renderTimeline() {
+        if (timelineItems.length === 0) {
+            timeline.innerHTML = '<span class="text-sky-400/50">Arraste aqui</span>';
+        } else {
+            timeline.innerHTML = '';
+            timelineItems.forEach((item, index) => {
+                const el = document.createElement('div');
+                el.className = 'timeline-item bg-sky-500/30 px-3 py-1 rounded-md text-sm';
+                el.innerText = item.text;
+                timeline.appendChild(el);
+            });
+        }
+    }
+
+    playBtn.addEventListener('click', () => {
+        if (timelineItems.length === 0) return;
+        let delay = 0;
+        player.innerHTML = '';
+        timelineItems.forEach((item, index) => {
+            setTimeout(() => {
+                const animEl = document.createElement('div');
+                animEl.className = 'absolute text-white text-2xl font-bold';
+                animEl.innerText = item.text;
+                let animationClass = '';
+                switch(item.type) {
+                    case 'text': animationClass = 'animate-bounce'; break;
+                    case 'effect': animationClass = 'animate-ping'; break;
+                    case 'transition': animationClass = 'animate-pulse'; break;
+                    case 'sound': animationClass = 'animate-spin'; break;
+                }
+                animEl.classList.add(...animationClass.split(' '));
+                player.innerHTML = '';
+                player.appendChild(animEl);
+                if(Tone.context.state === 'running') sounds.glitch.triggerAttackRelease("16n");
+            }, delay);
+            delay += 1000;
+        });
+        setTimeout(() => player.innerHTML = '<span>Player</span>', delay);
+    });
+    
+    clearBtn.addEventListener('click', () => {
+        timelineItems = [];
+        renderTimeline();
+    });
+
 });
 </script>
 
