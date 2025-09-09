@@ -97,7 +97,7 @@
              background: rgba(255, 255, 255, 0.2);
         }
 
-        /* Novas Animações para a tela de boas-vindas */
+        /* Animações para a tela de boas-vindas */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -128,6 +128,30 @@
             /* 'both' mantém o estado final da animação */
             animation: fadeInUp 0.8s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
         }
+
+        /* Animação da órbita */
+        .orbit-container {
+            position: absolute;
+            width: 550px;
+            height: 550px;
+            animation: orbit 30s linear infinite;
+        }
+
+        .orbiting-shape {
+            position: absolute;
+            top: 0;
+            left: calc(50% - 75px);
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.7);
+            filter: blur(70px);
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="min-h-screen relative">
@@ -139,6 +163,14 @@
 
     <!-- Tela de Boas-Vindas -->
     <div id="welcome-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-500 ease-out">
+        
+        <!-- Animação de Órbita com Glow -->
+        <div class="absolute -z-10 flex items-center justify-center">
+            <div class="orbit-container">
+                <div class="orbiting-shape"></div>
+            </div>
+        </div>
+
         <div class="glass-card no-hover text-center p-8 sm:p-12 rounded-3xl max-w-2xl w-full animate-welcome-card">
             <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300 animate-welcome-text" style="animation-delay: 0.2s;">
                 Bem-Vindo
@@ -158,6 +190,7 @@
             <h1 class="text-2xl font-bold tracking-tight text-white">ru4nedits.</h1>
             <nav>
                 <a href="#porque-me-escolher" class="text-slate-300 hover:text-white transition">Diferenciais</a>
+                <a href="#pacotes" class="ml-6 text-slate-300 hover:text-white transition">Pacotes</a>
                 <a href="#portfolio" class="ml-6 text-slate-300 hover:text-white transition">Portfólio</a>
                 <a href="#contato" class="ml-6 text-slate-300 hover:text-white transition">Contato</a>
             </nav>
@@ -184,7 +217,7 @@
                 </div>
             </section>
             
-            <!-- Nova Seção: Por que me escolher? -->
+            <!-- Seção: Por que me escolher? -->
             <section id="porque-me-escolher" class="mt-32 sm:mt-40">
                 <h3 class="text-4xl font-bold tracking-tight text-white">Por que me escolher?</h3>
                 <p class="mt-4 text-lg text-slate-400">Edição de vídeo que vai além do visual.</p>
@@ -212,6 +245,23 @@
                         </div>
                         <h4 class="mt-4 text-xl font-bold text-white">Qualidade Profissional</h4>
                         <p class="mt-2 text-slate-400">Utilizo as ferramentas e técnicas mais recentes do mercado para entregar um trabalho com qualidade de ponta, desde a cor até o som, garantindo que seu vídeo se destaque da concorrência.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Pacotes Promocionais -->
+            <section id="pacotes" class="mt-32 sm:mt-40">
+                <div class="glass-card p-8 md:p-12 rounded-3xl max-w-4xl mx-auto">
+                    <h3 class="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300">Pacotes Promocionais</h3>
+                    <p class="mt-4 text-lg text-slate-400">Oferta especial por tempo limitado para novos projetos.</p>
+                    <div class="mt-8 border-t border-slate-700/50 pt-8">
+                        <h4 class="text-2xl font-bold text-white">Compre 1, Leve 2</h4>
+                        <p class="mt-2 text-slate-300 max-w-xl mx-auto">
+                            Na contratação da edição de um vídeo, você ganha a edição de um segundo vídeo totalmente grátis, independente do estilo ou complexidade. A oportunidade perfeita para dobrar seu conteúdo!
+                        </p>
+                        <a href="#contato" class="mt-6 inline-block btn-primary text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-blue-500/20 transition-transform transform hover:scale-105">
+                            Quero essa oferta!
+                        </a>
                     </div>
                 </div>
             </section>
