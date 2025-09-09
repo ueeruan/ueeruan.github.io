@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ru4nedits | Editor de Vídeo Criativo</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -24,17 +25,30 @@
             overflow-x: hidden;
         }
 
-        /* DYNAMIC LIQUID BACKGROUND */
-        #liquid-cursor {
+        /* DYNAMIC LIQUID BACKGROUND & PARALLAX */
+        .parallax-layer {
             position: fixed;
-            width: 600px;
-            height: 600px;
+            width: 800px;
+            height: 800px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.15), transparent 60%);
-            filter: blur(120px);
             z-index: -1;
             pointer-events: none;
             transition: transform 0.2s ease-out;
+            will-change: transform;
+        }
+        #liquid-cursor {
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15), transparent 60%);
+            filter: blur(120px);
+        }
+        #parallax-bg-1 {
+            background: radial-gradient(circle, rgba(125, 211, 252, 0.05), transparent 70%);
+            filter: blur(150px);
+            top: -20%; left: -10%;
+        }
+        #parallax-bg-2 {
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.08), transparent 70%);
+            filter: blur(100px);
+            bottom: -30%; right: -15%;
         }
 
         /* GLASSMORPHISM CARD STYLE */
@@ -95,10 +109,22 @@
         .whatsapp-button { position: relative; overflow: hidden; }
         .whatsapp-button span { position: absolute; border-radius: 50%; background: white; transform: scale(0); animation: ripple 0.6s linear; }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+        /* GAMIFICATION BADGE */
+        #badge-toast {
+            transform: translateY(150%);
+            transition: transform 0.5s cubic-bezier(0.215, 0.610, 0.355, 1);
+        }
+        #badge-toast.show {
+            transform: translateY(0);
+        }
+
     </style>
 </head>
 <body class="min-h-screen">
-    <div id="liquid-cursor"></div>
+    <div id="liquid-cursor" class="parallax-layer"></div>
+    <div id="parallax-bg-1" class="parallax-layer"></div>
+    <div id="parallax-bg-2" class="parallax-layer"></div>
 
     <!-- HEADER -->
     <header class="fixed top-0 left-0 right-0 z-50 p-4">
@@ -115,9 +141,9 @@
                     <span class="text-xl font-bold text-white tracking-tight">ru4nedits</span>
                 </a>
                 <nav class="hidden md:flex items-center gap-6 text-sky-200">
-                    <a href="#sobre" class="hover:text-white transition">Sobre</a>
-                    <a href="#portfolio" class="hover:text-white transition">Portfólio</a>
-                    <a href="#depoimentos" class="hover:text-white transition">Depoimentos</a>
+                    <a href="#sobre" class="nav-link hover:text-white transition">Sobre</a>
+                    <a href="#portfolio" class="nav-link hover:text-white transition">Portfólio</a>
+                    <a href="#depoimentos" class="nav-link hover:text-white transition">Depoimentos</a>
                 </nav>
             </div>
         </div>
@@ -134,7 +160,7 @@
                 <p class="mt-6 max-w-2xl mx-auto text-lg text-sky-200">
                     Transformo vídeos brutos em narrativas impactantes que capturam a atenção e geram resultados.
                 </p>
-                <a href="#portfolio" class="mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-sky-500/30 transition-all transform hover:scale-105 hover:bg-sky-400">
+                <a href="#portfolio" class="cta-button mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-sky-500/30 transition-all transform hover:scale-105 hover:bg-sky-400">
                     Veja meu portfólio
                 </a>
             </div>
@@ -172,6 +198,32 @@
             </div>
         </section>
 
+        <!-- HISTÓRIA ANIMADA SECTION -->
+        <section id="historia" class="container mx-auto max-w-5xl py-24 px-4">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-5xl font-bold text-white">A jornada de um vídeo</h2>
+                <p class="mt-4 text-lg text-sky-200">Veja como uma ideia se transforma em um resultado de impacto.</p>
+            </div>
+            <div class="glass-card rounded-3xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center reveal">
+                <div class="flex md:flex-col justify-around md:justify-start w-full md:w-1/4 gap-4">
+                    <button data-step="1" class="story-step active p-4 rounded-lg text-left glass-card-hover">
+                        <span class="font-bold text-white">1. O Problema</span><span class="text-sm block text-sky-300">Vídeo sem impacto</span>
+                    </button>
+                    <button data-step="2" class="story-step p-4 rounded-lg text-left glass-card-hover">
+                        <span class="font-bold text-white">2. A Edição</span><span class="text-sm block text-sky-300">Mágica acontece</span>
+                    </button>
+                    <button data-step="3" class="story-step p-4 rounded-lg text-left glass-card-hover">
+                        <span class="font-bold text-white">3. O Resultado</span><span class="text-sm block text-sky-300">Engajamento e conversão</span>
+                    </button>
+                </div>
+                <div class="w-full md:w-3/4">
+                    <div id="story-content" class="glass-card rounded-2xl p-6 min-h-[250px] transition-all duration-500">
+                        <!-- Content will be injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- DEPOIMENTOS SECTION -->
         <section id="depoimentos" class="py-24">
             <div class="text-center mb-12 reveal">
@@ -186,10 +238,17 @@
         </section>
     </main>
 
-    <!-- FLOATING BUTTONS -->
+    <!-- FLOATING BUTTONS & NOTIFICATIONS -->
     <a href="https://wa.me/5588996117377" target="_blank" class="whatsapp-button fixed bottom-6 right-6 z-50 bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.267.655 4.398 1.908 6.161l.114.162-1.217 4.459 4.569-1.195.163.097z"/></svg>
     </a>
+    <div id="badge-toast" class="fixed bottom-6 left-6 z-50 glass-card rounded-xl p-4 flex items-center gap-4">
+        <span id="badge-icon" class="text-2xl"></span>
+        <div>
+            <p id="badge-title" class="font-bold text-white"></p>
+            <p id="badge-text" class="text-sm text-sky-200"></p>
+        </div>
+    </div>
     
     <!-- MODALS -->
     <div id="portfolio-modal" class="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4 hidden">
@@ -207,9 +266,38 @@
             </div>
         </div>
     </div>
-    
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // --- START AUDIO CONTEXT ON USER INTERACTION ---
+    const startAudio = async () => {
+        if (Tone.context.state !== 'running') {
+            await Tone.start();
+            console.log("Audio context started");
+        }
+        document.documentElement.removeEventListener('mousedown', startAudio);
+        document.documentElement.removeEventListener('keydown', startAudio);
+    };
+    document.documentElement.addEventListener('mousedown', startAudio);
+    document.documentElement.addEventListener('keydown', startAudio);
+
+    // --- IMMERSIVE AUDIO SETUP ---
+    const sounds = {
+        pop: new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: 'sine' },
+            envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.4 },
+            volume: -20
+        }).toDestination(),
+        glitch: new Tone.PolySynth(Tone.NoiseSynth, {
+            noise: { type: 'pink' },
+            envelope: { attack: 0.001, decay: 0.05, sustain: 0 },
+            volume: -15
+        }).toDestination(),
+        swipe: new Tone.PolySynth(Tone.MembraneSynth, {
+             pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.0006, decay: 0.5, sustain: 0 }, volume: -10
+        }).toDestination()
+    };
+    
     // --- DATA ---
     const portfolioData = [
         { id: 'kX1_rmdGhe4', title: 'Head de Tráfego', description: 'Edição dinâmica com foco em conversão, utilizando motion graphics e cortes rápidos para prender a atenção do espectador.' },
@@ -224,15 +312,24 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Cliente B', feedback: 'Profissionalismo e criatividade definem a edição. Entregou um resultado muito acima do esperado e dentro do prazo.', company: 'Agência de Marketing' },
         { name: 'Cliente C', feedback: 'Incrível a capacidade de contar uma história. Nossos depoimentos agora emocionam e conectam de verdade com a audiência.', company: 'Produtora de Conteúdo' },
     ];
+    const storyData = {
+        1: { title: 'Análise do Problema', content: 'Recebemos um vídeo bruto com grande potencial, mas sem ritmo, cor e clareza. O desafio é transformá-lo em uma peça que cative desde o primeiro segundo.' },
+        2: { title: 'Processo de Edição Criativa', content: 'Aplicamos cortes dinâmicos, color grading profissional, motion graphics para destacar informações e uma trilha sonora que guia a emoção. Cada detalhe é ajustado.' },
+        3: { title: 'Resultado de Impacto', content: 'O vídeo final não apenas parece profissional, mas performa melhor. Aumento de engajamento, retenção e, o mais importante, conversão para o cliente.' },
+    };
 
     // --- DYNAMIC CONTENT INJECTION ---
     const portfolioGrid = document.querySelector('#portfolio .grid');
     portfolioData.forEach((item, index) => {
         const card = document.createElement('div');
+        card.dataset.id = item.id;
         card.className = 'reveal portfolio-card relative glass-card rounded-2xl overflow-hidden glass-card-hover cursor-pointer';
         card.style.transitionDelay = `${index * 100}ms`;
         card.innerHTML = `<img src="https://i.ytimg.com/vi/${item.id}/hqdefault.jpg" alt="${item.title}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"><div class="p-4"><h3 class="font-bold text-white text-lg">${item.title}</h3><p class="text-sm text-sky-300 mt-1">Clique para ver detalhes</p></div>`;
-        card.addEventListener('click', () => openModal('portfolio-modal', item));
+        card.addEventListener('click', () => {
+            if (Tone.context.state === 'running') sounds.glitch.triggerAttackRelease("8n");
+            openModal('portfolio-modal', item);
+        });
         portfolioGrid.appendChild(card);
     });
     const carouselContainer = document.querySelector('.carousel-container');
@@ -245,10 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- MODAL LOGIC ---
     const portfolioModal = document.getElementById('portfolio-modal');
-
+    
     function openModal(modalId, data) {
         const modal = document.getElementById(modalId);
-        if (modalId === 'portfolio-modal') {
+        if (modalId === 'portfolio-modal' && data) {
             modal.querySelector('#modal-video').src = `https://www.youtube.com/embed/${data.id}?autoplay=1`;
             modal.querySelector('#modal-title').textContent = data.title;
             modal.querySelector('#modal-description').textContent = data.description;
@@ -257,9 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function closeModal(modalId) {
         const modal = document.getElementById(modalId);
-        if (modalId === 'portfolio-modal') {
-            modal.querySelector('#modal-video').src = "";
-        }
+        if (modalId === 'portfolio-modal') modal.querySelector('#modal-video').src = "";
         modal.classList.add('hidden');
     }
     document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.fixed').id)));
@@ -294,9 +389,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- DYNAMIC INTERACTIONS ---
-    const liquidCursor = document.getElementById('liquid-cursor');
+    const parallaxLayers = document.querySelectorAll('.parallax-layer');
     window.addEventListener('mousemove', e => {
-        liquidCursor.style.transform = `translate(${e.clientX - 300}px, ${e.clientY - 300}px)`;
+        const x = e.clientX - window.innerWidth / 2;
+        const y = e.clientY - window.innerHeight / 2;
+        parallaxLayers[0].style.transform = `translate(${x / 20}px, ${y / 20}px)`; // Liquid Cursor
+        parallaxLayers[1].style.transform = `translate(${x / 80}px, ${y / 80}px)`; // Farthest
+        parallaxLayers[2].style.transform = `translate(${x / 40}px, ${y / 40}px)`; // Closest
     });
     
     document.querySelectorAll('.portfolio-card').forEach(card => {
@@ -307,21 +406,61 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
         });
+        card.addEventListener('mouseenter', () => {
+            if(Tone.context.state === 'running') sounds.pop.triggerAttackRelease("C4", "8n");
+        });
+    });
+    document.querySelectorAll('.nav-link, .cta-button, .story-step').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+             if(Tone.context.state === 'running') sounds.swipe.triggerAttackRelease("C2", "8n");
+        });
+    });
+    document.querySelector('.whatsapp-button').addEventListener('click', function(e) {
+        let ripple = document.createElement("span"); this.appendChild(ripple);
+        let x = e.clientX - e.target.offsetLeft; let y = e.clientY - e.target.offsetTop;
+        ripple.style.left = `${x}px`; ripple.style.top = `${y}px`;
+        setTimeout(() => { ripple.remove(); }, 600);
     });
 
-    document.querySelector('.whatsapp-button').addEventListener('click', function(e) {
-        let ripple = document.createElement("span");
-        this.appendChild(ripple);
-        let x = e.clientX - e.target.offsetLeft;
-        let y = e.clientY - e.target.offsetTop;
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-        setTimeout(() => { ripple.remove(); }, 600);
+    // --- ANIMATED STORY SECTION ---
+    const storySteps = document.querySelectorAll('.story-step');
+    const storyContentEl = document.getElementById('story-content');
+    function updateStoryContent(step) {
+        const data = storyData[step];
+        storyContentEl.innerHTML = `<h3 class="text-2xl font-bold text-white mb-2">${data.title}</h3><p class="text-sky-200">${data.content}</p>`;
+        storySteps.forEach(s => s.classList.remove('active', 'bg-sky-500/20'));
+        document.querySelector(`.story-step[data-step="${step}"]`).classList.add('active', 'bg-sky-500/20');
+    }
+    storySteps.forEach(step => step.addEventListener('click', () => updateStoryContent(step.dataset.step)));
+    updateStoryContent(1);
+
+    // --- GAMIFICATION ---
+    const hoveredCards = new Set();
+    const badgeToast = document.getElementById('badge-toast');
+    let explorerBadgeUnlocked = false;
+    
+    function showBadge(type) {
+        if (type === 'explorer' && !explorerBadgeUnlocked) {
+            badgeToast.querySelector('#badge-icon').innerHTML = '🧭';
+            badgeToast.querySelector('#badge-title').innerText = 'Explorador';
+            badgeToast.querySelector('#badge-text').innerText = 'Você explorou todos os projetos!';
+            explorerBadgeUnlocked = true;
+            badgeToast.classList.add('show');
+            setTimeout(() => badgeToast.classList.remove('show'), 4000);
+        }
+    }
+    
+    document.querySelectorAll('.portfolio-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            hoveredCards.add(card.dataset.id);
+            if (hoveredCards.size === portfolioData.length) {
+                showBadge('explorer');
+            }
+        });
     });
 });
 </script>
 
 </body>
 </html>
-
 
