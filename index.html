@@ -9,121 +9,98 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* SCROLL BEHAVIOR */
+        :root {
+            --dark-purple: #1a0b2e;
+            --primary-purple: #7f56d9;
+            --light-purple: #a78bfa;
+            --glass-bg: rgba(45, 23, 76, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a0b2e; /* Roxo escuro base */
+            background-color: var(--dark-purple);
             color: #e2e8f0;
             overflow-x: hidden;
         }
 
-        /* LIQUID BACKGROUND EFFECT */
-        body::before {
-            content: '';
+        /* DYNAMIC LIQUID BACKGROUND */
+        #liquid-cursor {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at 15% 25%, rgba(127, 86, 217, 0.2), transparent 40%),
-                        radial-gradient(circle at 85% 75%, rgba(167, 139, 250, 0.25), transparent 50%);
-            filter: blur(120px);
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.25), transparent 60%);
+            filter: blur(100px);
             z-index: -1;
-            animation: animateLiquid 25s ease-in-out infinite alternate;
-        }
-
-        @keyframes animateLiquid {
-            to { transform: scale(1.2) translate(-5vw, 5vh) rotate(15deg); }
+            pointer-events: none;
+            transition: transform 0.2s ease-out;
         }
 
         /* GLASSMORPHISM CARD STYLE */
         .glass-card {
-            background: rgba(45, 23, 76, 0.3); /* Base de vidro roxa */
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-
         .glass-card-hover:hover {
             border-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-8px) scale(1.02);
+            transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         
         /* SCROLLBAR */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a0b2e; }
+        ::-webkit-scrollbar-track { background: var(--dark-purple); }
         ::-webkit-scrollbar-thumb { background: rgba(127, 86, 217, 0.5); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(127, 86, 217, 0.8); }
 
         /* HERO VIDEO BACKGROUND */
         #hero-video-bg {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            filter: blur(15px) brightness(0.4);
-            opacity: 0.5;
+            position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
+            object-fit: cover; transform: translate(-50%, -50%); z-index: -1;
+            filter: blur(15px) brightness(0.4); opacity: 0.5;
         }
 
         /* ENTRANCE ANIMATIONS */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s, transform 0.8s;
-            transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
         
-        /* TESTIMONIALS CAROUSEL */
+        /* CAROUSEL */
         .carousel-container { scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; }
         .carousel-item { scroll-snap-align: center; }
 
-        /* INTERACTIVE SECTION */
-        .interactive-canvas {
-            background-image: url('https://placehold.co/1280x720/1a0b2e/3c1e60?text=Sua+Cria%C3%A7%C3%A3o');
-            background-size: cover;
-            background-position: center;
-        }
-        .draggable { cursor: grab; }
-        .draggable:active { cursor: grabbing; }
-        #interactive-timeline.drag-over { border-color: #a78bfa; }
-        
-        /* PORTFOLIO MODAL */
-        #portfolio-modal-content { animation: modal-swoop 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+        /* MODAL ANIMATION */
+        .modal-content { animation: modal-swoop 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
         @keyframes modal-swoop {
             from { opacity: 0; transform: translateY(50px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
+        
+        /* WHATSAPP BUTTON LIQUID EFFECT */
+        .whatsapp-button svg { animation: liquid-wave 3s infinite; }
+        @keyframes liquid-wave { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     </style>
 </head>
 <body class="min-h-screen">
+    <div id="liquid-cursor"></div>
 
     <!-- HEADER -->
-    <header id="header" class="fixed top-0 left-0 right-0 z-50 p-4 transition-all duration-300">
+    <header class="fixed top-0 left-0 right-0 z-50 p-4">
         <div class="container mx-auto max-w-7xl">
             <div class="glass-card flex justify-between items-center rounded-2xl px-6 py-3">
                 <a href="#" class="flex items-center gap-3">
-                    <!-- Glitchy Play Button Logo -->
                     <svg width="28" height="28" viewBox="0 0 24 24" class="text-purple-400">
-                        <defs><clipPath id="a"><path d="M0 0h24v24H0z"/></clipPath></defs>
-                        <g clip-path="url(#a)">
-                            <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(-1px); filter: drop-shadow(-1px 0 0 #a78bfa)"/>
-                            <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(1px); filter: drop-shadow(1px 0 0 #4f46e5)"/>
-                            <path d="M7 4v16l13-8L7 4z" fill="rgba(224, 212, 255, 0.8)"/>
-                        </g>
+                        <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(-1px); filter: drop-shadow(-1px 0 0 #a78bfa)"/>
+                        <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(1px); filter: drop-shadow(1px 0 0 #4f46e5)"/>
+                        <path d="M7 4v16l13-8L7 4z" fill="rgba(224, 212, 255, 0.8)"/>
                     </svg>
                     <span class="text-xl font-bold text-white tracking-tight">ru4nedits</span>
                 </a>
                 <nav class="hidden md:flex items-center gap-6 text-purple-200">
                     <a href="#sobre" class="hover:text-white transition">Sobre</a>
                     <a href="#portfolio" class="hover:text-white transition">Portfólio</a>
-                    <a href="#interativo" class="hover:text-white transition">Interativo</a>
                     <a href="#depoimentos" class="hover:text-white transition">Depoimentos</a>
                 </nav>
             </div>
@@ -133,9 +110,7 @@
     <main>
         <!-- HERO SECTION -->
         <section class="relative min-h-screen flex items-center justify-center text-center p-4 overflow-hidden">
-            <!-- [Vídeo de fundo IA com partículas de luz roxas e brancas em movimento lento] -->
             <video id="hero-video-bg" playsinline autoplay muted loop src="https://cdn.pixabay.com/video/2024/05/29/213239_large.mp4"></video>
-            
             <div class="relative z-10 glass-card rounded-3xl p-8 max-w-4xl reveal">
                 <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white to-purple-300">
                     Edições que transformam. Histórias que conectam.
@@ -143,8 +118,8 @@
                 <p class="mt-6 max-w-2xl mx-auto text-lg text-purple-200">
                     Transformo vídeos brutos em narrativas impactantes que capturam a atenção e geram resultados.
                 </p>
-                <a href="#interativo" class="mt-8 inline-block bg-purple-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-purple-500/30 transition-transform transform hover:scale-105 hover:bg-purple-500">
-                    Crie um vídeo interativo
+                <a href="#portfolio" class="mt-8 inline-block bg-purple-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-purple-500/30 transition-transform transform hover:scale-105 hover:bg-purple-500">
+                    Veja meu portfólio
                 </a>
             </div>
         </section>
@@ -153,25 +128,17 @@
         <section id="sobre" class="container mx-auto max-w-5xl py-24 px-4 text-center">
             <div class="glass-card rounded-3xl p-12 reveal">
                 <div class="flex flex-col md:flex-row items-center gap-12">
-                    <!-- Avatar/Icone -->
                     <div class="glass-card rounded-full p-2">
                         <div class="bg-purple-900 rounded-full w-32 h-32 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-purple-300"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
                         </div>
                     </div>
-                    <!-- Texto -->
                     <div class="text-left">
                         <h2 class="text-4xl font-bold text-white">Especialista em dar vida às suas ideias.</h2>
-                        <p class="mt-4 text-purple-200">Com foco em storytelling e precisão técnica, meu trabalho é garantir que cada frame do seu vídeo cumpra um propósito: engajar, emocionar e converter. Não entrego apenas edições, entrego resultados mensuráveis.</p>
+                        <p class="mt-4 text-purple-200">Com foco em storytelling e precisão técnica, meu trabalho é garantir que cada frame cumpra um propósito: engajar, emocionar e converter.</p>
                         <div class="mt-6 flex gap-8">
-                            <div>
-                                <span class="text-3xl font-bold text-purple-400">+30%</span>
-                                <p class="text-sm text-purple-200">Aumento médio de retenção</p>
-                            </div>
-                            <div>
-                                <span class="text-3xl font-bold text-purple-400">+50</span>
-                                <p class="text-sm text-purple-200">Clientes satisfeitos</p>
-                            </div>
+                            <div><span class="text-3xl font-bold text-purple-400">+10M</span><p class="text-sm text-purple-200">Visualizações geradas</p></div>
+                            <div><span class="text-3xl font-bold text-purple-400">+50</span><p class="text-sm text-purple-200">Projetos entregues</p></div>
                         </div>
                     </div>
                 </div>
@@ -186,57 +153,6 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Portfolio items will be injected by JS -->
-            </div>
-        </section>
-        
-        <!-- INTERACTIVE SECTION -->
-        <section id="interativo" class="container mx-auto max-w-6xl py-24 px-4">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-5xl font-bold text-white">Crie seu mini vídeo em segundos!</h2>
-                <p class="mt-4 text-lg text-purple-200">Arraste, solte e combine elementos para sentir como eu transformo ideias em vídeos impactantes.</p>
-            </div>
-            <div class="glass-card rounded-3xl p-8 reveal">
-                <!-- Desafios -->
-                <div id="desafios-container" class="mb-8">
-                    <h3 class="font-bold text-white mb-4 text-center">Comece com um desafio:</h3>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <button data-challenge="retention" class="glass-card-hover glass-card rounded-full px-5 py-2">Problema de Retenção?</button>
-                        <button data-challenge="boring" class="glass-card-hover glass-card rounded-full px-5 py-2">Vídeo Monótono?</button>
-                        <button data-challenge="sales" class="glass-card-hover glass-card rounded-full px-5 py-2">Precisa Vender Mais?</button>
-                    </div>
-                </div>
-                
-                <div class="flex flex-col lg:flex-row gap-8">
-                    <!-- Elementos Arrastáveis -->
-                    <div class="lg:w-1/3 space-y-4">
-                        <!-- Textos -->
-                        <div>
-                            <h4 class="font-semibold text-purple-200 mb-2">Textos</h4>
-                            <div class="flex flex-wrap gap-2">
-                                <div title="Use para chamar atenção nos primeiros 3s" class="draggable group relative glass-card p-3 rounded-lg" draggable="true" data-type="text" data-value="Hook Inicial!">💥 Hook Inicial!</div>
-                                <div title="Ideal para narrações e explicações" class="draggable group relative glass-card p-3 rounded-lg" draggable="true" data-type="text" data-value="Legenda Dinâmica">⚡ Legenda</div>
-                            </div>
-                        </div>
-                        <!-- Efeitos -->
-                        <div>
-                            <h4 class="font-semibold text-purple-200 mb-2">Efeitos</h4>
-                             <div class="flex flex-wrap gap-2">
-                                <div title="Aumenta o impacto visual" class="draggable group relative glass-card p-3 rounded-lg" draggable="true" data-type="effect" data-value="glitch">🎞️ Glitch</div>
-                                <div title="Cria um clima cinematográfico" class="draggable group relative glass-card p-3 rounded-lg" draggable="true" data-type="effect" data-value="light-leak">🌈 Light Leak</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Canvas e Timeline -->
-                    <div class="flex-grow flex flex-col gap-4">
-                        <div class="interactive-canvas relative w-full aspect-video rounded-lg flex items-center justify-center p-4">
-                             <!-- [Imagem de fundo do canvas, mostrando uma cena abstrata roxa] -->
-                        </div>
-                        <div id="interactive-timeline" class="glass-card rounded-lg p-4 min-h-[80px] flex flex-wrap gap-3 items-center">
-                            <span class="text-purple-300 opacity-50">Arraste os elementos para cá</span>
-                        </div>
-                        <button id="interactive-play" class="bg-purple-600 text-white font-semibold py-3 rounded-full hover:bg-purple-500 transition">▶️ Simular Vídeo</button>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -254,21 +170,21 @@
         </section>
     </main>
 
-    <!-- FLOATING WHATSAPP BUTTON -->
-    <a href="https://wa.me/5588996117377" target="_blank" class="fixed bottom-6 right-6 z-50 bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
+    <!-- FLOATING BUTTONS -->
+    <a href="https://wa.me/5588996117377" target="_blank" class="whatsapp-button fixed bottom-6 right-6 z-50 bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.267.655 4.398 1.908 6.161l.114.162-1.217 4.459 4.569-1.195.163.097z"/></svg>
     </a>
+    <button id="feedback-fab" class="fixed bottom-28 right-6 z-50 bg-purple-600 text-white px-4 py-3 rounded-full shadow-lg transform transition-transform hover:scale-105">
+        Quer ver como ficaria seu vídeo?
+    </button>
     
-    <!-- PORTFOLIO MODAL -->
-    <div id="portfolio-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 hidden">
-        <div id="portfolio-modal-content" class="glass-card rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 relative">
-            <button id="modal-close-btn" class="absolute top-4 right-4 text-white hover:text-purple-300">&times;</button>
-            <div class="aspect-video mb-4 rounded-lg overflow-hidden">
-                <iframe id="modal-video" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
+    <!-- MODALS -->
+    <div id="portfolio-modal" class="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4 hidden">
+        <div class="modal-content glass-card rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 relative">
+            <button class="modal-close-btn absolute top-4 right-4 text-white text-3xl hover:text-purple-300">&times;</button>
+            <div class="aspect-video mb-4 rounded-lg overflow-hidden bg-black"><iframe id="modal-video" class="w-full h-full" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
             <h3 id="modal-title" class="text-2xl font-bold text-white mb-2"></h3>
             <p id="modal-description" class="text-purple-200"></p>
-            <!-- Before/After Placeholder -->
             <div class="mt-4">
                 <h4 class="font-semibold text-white">Antes e Depois (Simulação)</h4>
                 <div class="flex gap-4 mt-2">
@@ -278,82 +194,101 @@
             </div>
         </div>
     </div>
+    
+    <div id="feedback-modal" class="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4 hidden">
+        <div class="modal-content glass-card rounded-2xl w-full max-w-md p-8 relative">
+            <button class="modal-close-btn absolute top-4 right-4 text-white text-3xl hover:text-purple-300">&times;</button>
+            <div id="feedback-form-content">
+                <h3 class="text-2xl font-bold text-white mb-2">Receba uma prévia IA</h3>
+                <p class="text-purple-200 mb-6">Cole o link do seu vídeo (YouTube, Drive, etc.) e veja uma simulação de como ele poderia ficar.</p>
+                <input id="video-link-input" type="text" placeholder="https://seu-video.com/link" class="w-full bg-purple-900/50 border border-purple-400/50 rounded-lg px-4 py-2 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <button id="submit-feedback" class="mt-4 w-full bg-purple-600 text-white font-semibold py-3 rounded-full hover:bg-purple-500 transition">Gerar Prévia</button>
+            </div>
+            <div id="feedback-preview-content" class="hidden text-center">
+                 <h3 class="text-2xl font-bold text-white mb-4">Analisando seu vídeo...</h3>
+                 <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-400 mx-auto"></div>
+                 <p class="text-purple-200 mt-4">Nossa IA está aplicando as melhores técnicas de edição. Isso pode levar um momento.</p>
+            </div>
+        </div>
+    </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
     // --- DATA ---
     const portfolioData = [
         { id: 'kX1_rmdGhe4', title: 'Head de Tráfego', description: 'Edição dinâmica com foco em conversão, utilizando motion graphics e cortes rápidos para prender a atenção do espectador.' },
         { id: 'gMDAMt-tFo4', title: 'Vídeo Curto Dinâmico', description: 'Projeto focado em redes sociais, com legendas estilizadas e efeitos sonoros para maximizar o engajamento em vídeos curtos.' },
         { id: 'A9uGJAtHZ3U', title: 'Reel Vertical', description: 'Adaptação de conteúdo para o formato vertical, otimizando o enquadramento e adicionando elementos gráficos que funcionam melhor em stories e reels.' },
-        { id: 'fzYXEga_wnE', title: 'Alerta de Golpe', description: 'Vídeo informativo com ritmo acelerado para criar um senso de urgência e clareza na mensagem, usando color grading para destacar os pontos importantes.' },
-        { id: '5bCEZgA11T0', title: 'Importância do Advogado', description: 'Edição sóbria e profissional, focada em transmitir autoridade e confiança através de transições suaves e tratamento de áudio.' },
-        { id: 'Bh-6eIgu83U', title: 'Prescrifácil App', description: 'Vídeo de apresentação de produto, combinando captura de tela com animações para explicar funcionalidades de forma clara e atrativa.' },
-        { id: 'bfkqtuUz0bY', title: 'Destaques de Atleta', description: 'Highlight reel com foco em impacto e emoção, utilizando slow motion, trilha sonora sincronizada e correção de cor para valorizar cada jogada.' },
+        { id: 'fzYXEga_wnE', title: 'Alerta de Golpe', description: 'Vídeo informativo com ritmo acelerado para criar um senso de urgência e clareza na mensagem.' },
+        { id: '5bCEZgA11T0', title: 'Importância do Advogado', description: 'Edição sóbria e profissional, focada em transmitir autoridade e confiança através de transições suaves.' },
+        { id: 'Bh-6eIgu83U', title: 'Apresentação de App', description: 'Vídeo de apresentação de produto, combinando captura de tela com animações para explicar funcionalidades.' },
     ];
-
     const testimonialsData = [
-        { name: 'Cliente A', feedback: '"O trabalho do Ruan transformou completamente a forma como apresentamos nossos vídeos. A retenção do público aumentou em 40%!"', company: 'Startup Inovadora' },
-        { name: 'Cliente B', feedback: '"Profissionalismo e criatividade definem a edição. Entregou um resultado muito acima do esperado e dentro do prazo."', company: 'Agência de Marketing' },
-        { name: 'Cliente C', feedback: '"Incrível a capacidade de contar uma história. Nossos depoimentos agora emocionam e conectam de verdade com a audiência."', company: 'Produtora de Conteúdo' },
-        { name: 'Cliente D', feedback: '"Rápido, comunicativo e extremamente talentoso. Entendeu a visão do projeto desde o início. Recomendo fortemente!"', company: 'Influenciador Digital' },
+        { name: 'Cliente A', feedback: 'O trabalho do Ruan transformou completamente a forma como apresentamos nossos vídeos. A retenção do público aumentou em 40%!', company: 'Startup Inovadora' },
+        { name: 'Cliente B', feedback: 'Profissionalismo e criatividade definem a edição. Entregou um resultado muito acima do esperado e dentro do prazo.', company: 'Agência de Marketing' },
+        { name: 'Cliente C', feedback: 'Incrível a capacidade de contar uma história. Nossos depoimentos agora emocionam e conectam de verdade com a audiência.', company: 'Produtora de Conteúdo' },
     ];
 
-    // --- INITIALIZATION ---
+    // --- DYNAMIC CONTENT INJECTION ---
     const portfolioGrid = document.querySelector('#portfolio .grid');
     portfolioData.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'reveal glass-card rounded-2xl overflow-hidden glass-card-hover cursor-pointer';
         card.style.transitionDelay = `${index * 100}ms`;
-        card.innerHTML = `
-            <img src="https://i.ytimg.com/vi/${item.id}/hqdefault.jpg" alt="${item.title}" class="w-full h-48 object-cover">
-            <div class="p-4">
-                <h3 class="font-bold text-white text-lg">${item.title}</h3>
-                <p class="text-sm text-purple-300 mt-1">Clique para ver detalhes</p>
-            </div>
-        `;
-        card.addEventListener('click', () => openPortfolioModal(item));
+        card.innerHTML = `<img src="https://i.ytimg.com/vi/${item.id}/hqdefault.jpg" alt="${item.title}" class="w-full h-48 object-cover"><div class="p-4"><h3 class="font-bold text-white text-lg">${item.title}</h3><p class="text-sm text-purple-300 mt-1">Clique para ver detalhes</p></div>`;
+        card.addEventListener('click', () => openModal('portfolio-modal', item));
         portfolioGrid.appendChild(card);
     });
-
     const carouselContainer = document.querySelector('.carousel-container');
     testimonialsData.forEach(item => {
         const card = document.createElement('div');
         card.className = 'carousel-item flex-shrink-0 w-[80%] md:w-[45%]';
-        card.innerHTML = `
-            <div class="glass-card rounded-2xl p-8 h-full">
-                <p class="text-purple-200 italic">“${item.feedback}”</p>
-                <div class="mt-4 text-right">
-                    <p class="font-bold text-white">${item.name}</p>
-                    <p class="text-sm text-purple-300">${item.company}</p>
-                </div>
-            </div>
-        `;
+        card.innerHTML = `<div class="glass-card rounded-2xl p-8 h-full"><p class="text-purple-200 italic">“${item.feedback}”</p><div class="mt-4 text-right"><p class="font-bold text-white">${item.name}</p><p class="text-sm text-purple-300">${item.company}</p></div></div>`;
         carouselContainer.appendChild(card);
     });
 
-    // --- PORTFOLIO MODAL LOGIC ---
-    const modal = document.getElementById('portfolio-modal');
-    const modalCloseBtn = document.getElementById('modal-close-btn');
-    const modalVideo = document.getElementById('modal-video');
-    const modalTitle = document.getElementById('modal-title');
-    const modalDescription = document.getElementById('modal-description');
+    // --- MODAL LOGIC ---
+    const portfolioModal = document.getElementById('portfolio-modal');
+    const feedbackModal = document.getElementById('feedback-modal');
+    const feedbackFab = document.getElementById('feedback-fab');
+    const submitFeedbackBtn = document.getElementById('submit-feedback');
 
-    function openPortfolioModal(item) {
-        modalVideo.src = `https://www.youtube.com/embed/${item.id}?autoplay=1`;
-        modalTitle.textContent = item.title;
-        modalDescription.textContent = item.description;
+    function openModal(modalId, data) {
+        const modal = document.getElementById(modalId);
+        if (modalId === 'portfolio-modal') {
+            modal.querySelector('#modal-video').src = `https://www.youtube.com/embed/${data.id}?autoplay=1`;
+            modal.querySelector('#modal-title').textContent = data.title;
+            modal.querySelector('#modal-description').textContent = data.description;
+        }
         modal.classList.remove('hidden');
     }
-
-    function closePortfolioModal() {
-        modalVideo.src = "";
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modalId === 'portfolio-modal') {
+            modal.querySelector('#modal-video').src = "";
+        }
         modal.classList.add('hidden');
     }
-    modalCloseBtn.addEventListener('click', closePortfolioModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closePortfolioModal();
+    document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', () => {
+        closeModal(btn.closest('.fixed').id);
+    }));
+    [portfolioModal, feedbackModal].forEach(modal => modal.addEventListener('click', e => {
+        if (e.target === modal) closeModal(modal.id);
+    }));
+    feedbackFab.addEventListener('click', () => openModal('feedback-modal'));
+    submitFeedbackBtn.addEventListener('click', () => {
+        const form = document.getElementById('feedback-form-content');
+        const preview = document.getElementById('feedback-preview-content');
+        form.classList.add('hidden');
+        preview.classList.remove('hidden');
+        setTimeout(() => {
+            // Simulação: Após 3 segundos, exibe um alerta e reseta o formulário
+            alert('Prévia gerada! (Simulação)\nSua versão otimizada teria melhor cor, cortes dinâmicos e som impactante.');
+            closeModal('feedback-modal');
+            form.classList.remove('hidden');
+            preview.classList.add('hidden');
+            document.getElementById('video-link-input').value = '';
+        }, 3000);
     });
 
     // --- REVEAL ON SCROLL ---
@@ -365,13 +300,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }, { threshold: 0.1 });
-
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     
-    // --- INTERACTIVE SECTION LOGIC ---
-    // (A simplified simulation logic)
-    // ... Add interactive logic here if needed
-
+    // --- DYNAMIC LIQUID CURSOR ---
+    const liquidCursor = document.getElementById('liquid-cursor');
+    window.addEventListener('mousemove', e => {
+        liquidCursor.style.transform = `translate(${e.clientX - 250}px, ${e.clientY - 250}px)`;
+    });
 });
 </script>
 
