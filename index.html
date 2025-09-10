@@ -3,49 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ru4nedits | Editor de Vídeo Criativo</title>
+    <!-- SEO Meta Tags -->
+    <title>ru4nedits | Editor de Vídeo & Motion Designer</title>
+    <meta name="description" content="Editor de vídeo profissional especializado em criativos para redes sociais, motion graphics e conteúdo que vende. Trabalhos com grandes criadores como Balian.">
+    <meta name="keywords" content="editor de vídeo, ru4nedits, motion graphics, criativos, Balian, edição de vídeo, portfólio">
+    <meta name="author" content="ru4nedits">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dark-blue: #0F172A; /* slate-900 */
-            --primary-blue: #38BDF8; /* sky-400 */
-            --glass-bg: rgba(30, 41, 59, 0.5); /* slate-800 com 50% opacidade */
+            --dark-bg: #020617; /* slate-950 */
+            --primary-blue: #38bdf8; /* sky-400 */
+            --glass-bg: rgba(30, 41, 59, 0.5); /* slate-800 com 50% */
             --glass-border: rgba(255, 255, 255, 0.1);
         }
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--dark-blue);
-            color: #e2e8f0; /* slate-200 */
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 30%),
+                              radial-gradient(circle at 80% 90%, rgba(56, 189, 248, 0.1) 0%, transparent 30%);
+            color: #cbd5e1; /* slate-300 */
             overflow-x: hidden;
-        }
-
-        /* Fundo com Partículas */
-        .particle-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-        }
-        .particle {
-            position: absolute;
-            background-color: var(--primary-blue);
-            border-radius: 50%;
-            opacity: 0.1;
-            animation: float 25s infinite ease-in-out;
-        }
-        @keyframes float {
-            0% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-20vh) translateX(10vw); }
-            100% { transform: translateY(0) translateX(0); }
         }
 
         /* Estilo Glassmorphism */
@@ -54,16 +36,15 @@
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
         }
         
         /* Botões com Efeito Glow */
         .btn-glow {
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
         .btn-glow:hover {
-            box-shadow: 0 0 15px 0px var(--primary-blue);
+            box-shadow: 0 0 20px 0px var(--primary-blue);
             transform: translateY(-2px);
         }
 
@@ -85,7 +66,7 @@
             height: 0;
             overflow: hidden;
             width: 100%;
-            border-radius: 0.75rem; /* rounded-xl */
+            border-radius: 0.75rem;
         }
         .video-container iframe {
             position: absolute;
@@ -97,26 +78,36 @@
 
         /* Scrollbar customizada */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--dark-blue); }
+        ::-webkit-scrollbar-track { background: var(--dark-bg); }
         ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 10px; }
+
+        /* Accordion FAQ */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
     </style>
 </head>
 <body class="min-h-screen">
-    <div class="particle-bg"></div>
 
     <!-- HEADER -->
     <header class="fixed top-0 left-0 right-0 z-50 p-4">
         <div class="container mx-auto max-w-7xl">
             <div class="glass-card flex justify-between items-center rounded-2xl px-6 py-3">
                 <a href="#" class="text-2xl font-bold text-white tracking-tight">ru4nedits</a>
-                <nav class="hidden md:flex items-center gap-6 text-slate-300">
+                <nav class="hidden lg:flex items-center gap-6 text-slate-300">
                     <a href="#sobre" class="hover:text-white transition">Sobre</a>
+                    <a href="#servicos" class="hover:text-white transition">Serviços</a>
                     <a href="#portfolio" class="hover:text-white transition">Portfólio</a>
                     <a href="#depoimentos" class="hover:text-white transition">Depoimentos</a>
+                    <a href="#blog" class="hover:text-white transition">Blog</a>
                     <a href="#contato" class="hover:text-white transition">Contato</a>
                 </nav>
-                <div class="md:hidden">
-                    <!-- Ícone de Menu para Mobile (funcionalidade pode ser adicionada com JS) -->
+                <a href="https://wa.me/5588996117377" target="_blank" class="btn-glow hidden lg:inline-block bg-sky-500 text-white font-semibold py-2 px-6 rounded-full">
+                    Fale comigo no WhatsApp
+                </a>
+                <div class="lg:hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
                 </div>
             </div>
@@ -125,37 +116,57 @@
 
     <main class="container mx-auto max-w-7xl px-4 pt-32">
         <!-- HERO SECTION -->
-        <section class="min-h-[70vh] flex flex-col items-center justify-center text-center reveal">
+        <section class="min-h-[80vh] flex flex-col items-center justify-center text-center reveal">
             <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white to-sky-300">
                 Transformo ideias em vídeos que vendem e engajam.
             </h1>
-            <p class="mt-6 max-w-2xl mx-auto text-lg text-slate-300">
-                Edição de vídeo estratégica para criadores de conteúdo e negócios que buscam resultados reais.
+            <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-300">
+                Mais de 10M+ de visualizações geradas para grandes criadores como <strong class="text-white">Balian</strong>. Especialista em edição, motion graphics e criativos que convertem.
             </p>
-            <a href="https://wa.me/5588996117377" target="_blank" class="btn-glow mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg">
-                Fale comigo no WhatsApp
-            </a>
+            <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                 <a href="https://wa.me/5588996117377" target="_blank" class="btn-glow inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg w-full sm:w-auto">
+                    Fale comigo no WhatsApp
+                </a>
+                <a href="https://www.instagram.com/ru4neditss" target="_blank" class="btn-glow inline-flex items-center gap-2 bg-white/10 text-white font-semibold py-3 px-8 rounded-full w-full sm:w-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    @ru4neditss
+                </a>
+            </div>
         </section>
 
         <!-- SOBRE SECTION -->
         <section id="sobre" class="py-24 reveal">
              <div class="glass-card rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-12">
-                 <div class="md:w-2/3 text-left">
-                    <h2 class="text-3xl font-bold text-white">Sobre mim</h2>
-                    <p class="mt-4 text-slate-300">Sou um editor de vídeo especialista em transformar conteúdo bruto em narrativas que não apenas capturam a atenção, mas também convertem. Com experiência trabalhando para grandes criadores como <strong class="text-white">Balian</strong>, entendo a linguagem da internet e como criar criativos que geram resultados.</p>
-                    <p class="mt-4 text-slate-300">Meu foco é em edição dinâmica, storytelling e uma estética limpa que eleva a qualidade do seu projeto e fortalece sua marca.</p>
-                 </div>
-                 <div class="md:w-1/3 w-full flex flex-col gap-6">
-                     <div class="glass-card rounded-xl p-4 text-center">
-                        <p class="text-3xl font-bold text-sky-400">+10M</p>
-                        <p class="text-sm text-slate-400">Visualizações Geradas</p>
-                     </div>
-                     <div class="glass-card rounded-xl p-4 text-center">
-                        <p class="text-3xl font-bold text-sky-400">+50</p>
-                        <p class="text-sm text-slate-400">Clientes Satisfeitos</p>
-                     </div>
+                 <img src="https://placehold.co/400x400/020617/38bdf8?text=R" alt="Foto de ru4nedits" class="w-48 h-48 rounded-full object-cover border-4 border-slate-700">
+                 <div class="text-left">
+                    <h2 class="text-4xl font-bold text-white">Editor de vídeo focado em resultados.</h2>
+                    <p class="mt-4 text-slate-300">Minha jornada na edição começou com a paixão por contar histórias. Hoje, aplico essa paixão de forma estratégica para ajudar criadores e marcas a alcançarem seus objetivos. Com um profundo conhecimento em edição, motion graphics e criativos para anúncios, meu trabalho vai além do visual: eu crio vídeos que funcionam.</p>
+                    <div class="mt-6 grid grid-cols-2 gap-6">
+                        <div class="glass-card rounded-xl p-4 text-center">
+                           <p class="text-3xl font-bold text-sky-400">+10M</p>
+                           <p class="text-sm text-slate-400">Visualizações Geradas</p>
+                        </div>
+                        <div class="glass-card rounded-xl p-4 text-center">
+                           <p class="text-3xl font-bold text-sky-400">+50</p>
+                           <p class="text-sm text-slate-400">Clientes Satisfeitos</p>
+                        </div>
+                    </div>
                  </div>
              </div>
+        </section>
+        
+        <!-- SERVIÇOS SECTION -->
+        <section id="servicos" class="py-24 reveal">
+             <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-white">Serviços</h2>
+                <p class="mt-4 text-lg text-slate-400">Soluções completas para seu conteúdo em vídeo.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="glass-card p-6 rounded-2xl text-center transition-transform hover:-translate-y-2"><svg class="mx-auto h-10 w-10 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg><h3 class="mt-4 text-xl font-bold text-white">Edição de Vídeo</h3><p class="mt-2 text-sm text-slate-400">Edição completa para YouTube, redes sociais e cursos online.</p></div>
+                <div class="glass-card p-6 rounded-2xl text-center transition-transform hover:-translate-y-2"><svg class="mx-auto h-10 w-10 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><h3 class="mt-4 text-xl font-bold text-white">Motion Graphics</h3><p class="mt-2 text-sm text-slate-400">Animações, vinhetas e elementos gráficos para elevar seu vídeo.</p></div>
+                <div class="glass-card p-6 rounded-2xl text-center transition-transform hover:-translate-y-2"><svg class="mx-auto h-10 w-10 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg><h3 class="mt-4 text-xl font-bold text-white">Criativos para Anúncios</h3><p class="mt-2 text-sm text-slate-400">Vídeos otimizados para campanhas de marketing e redes sociais.</p></div>
+                <div class="glass-card p-6 rounded-2xl text-center transition-transform hover:-translate-y-2"><svg class="mx-auto h-10 w-10 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg><h3 class="mt-4 text-xl font-bold text-white">Pós-Produção</h3><p class="mt-2 text-sm text-slate-400">Color grading, tratamento de áudio e finalização profissional.</p></div>
+            </div>
         </section>
 
         <!-- PORTFOLIO SECTION -->
@@ -181,26 +192,42 @@
                 <h2 class="text-4xl font-bold text-white">O que meus clientes dizem</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Depoimento 1 -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center">
-                    <img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=JS" alt="Foto de João Silva">
-                    <p class="mt-4 text-slate-300 italic">"A edição do Ruan elevou nosso conteúdo a outro nível. A retenção do público nunca foi tão alta!"</p>
-                    <p class="mt-4 font-bold text-white">João Silva</p>
-                    <p class="text-sm text-slate-400">Criador de Conteúdo</p>
+                <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center"><img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=JS" alt="Foto de João Silva"><p class="mt-4 text-slate-300 italic">"A edição do Ruan elevou nosso conteúdo a outro nível. A retenção do público nunca foi tão alta!"</p><p class="mt-4 font-bold text-white">João Silva</p><p class="text-sm text-slate-400">Criador de Conteúdo</p></div>
+                <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center"><img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=MA" alt="Foto de Maria Andrade"><p class="mt-4 text-slate-300 italic">"Profissionalismo e criatividade incríveis. Entregou um resultado muito acima do esperado e dentro do prazo."</p><p class="mt-4 font-bold text-white">Maria Andrade</p><p class="text-sm text-slate-400">Agência de Marketing</p></div>
+                <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center"><img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=CP" alt="Foto de Carlos Pereira"><p class="mt-4 text-slate-300 italic">"A capacidade de contar uma história através da edição é impressionante. Nossos anúncios nunca converteram tanto."</p><p class="mt-4 font-bold text-white">Carlos Pereira</p><p class="text-sm text-slate-400">E-commerce de Sucesso</p></div>
+            </div>
+        </section>
+
+        <!-- BLOG SECTION -->
+        <section id="blog" class="py-24 reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-white">Blog</h2>
+                <p class="mt-4 text-lg text-slate-400">Dicas e insights sobre o mundo do vídeo.</p>
+            </div>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card rounded-2xl overflow-hidden group transition-transform hover:-translate-y-2"><img src="https://placehold.co/600x400/0f172a/38bdf8?text=Dica+1" class="w-full h-40 object-cover"><div class="p-6"><h3 class="font-bold text-white text-lg">3 Dicas para Reter a Atenção</h3><p class="mt-2 text-sm text-slate-400">Aprenda técnicas simples que fazem toda a diferença.</p></div></div>
+                <div class="glass-card rounded-2xl overflow-hidden group transition-transform hover:-translate-y-2"><img src="https://placehold.co/600x400/0f172a/38bdf8?text=Guia" class="w-full h-40 object-cover"><div class="p-6"><h3 class="font-bold text-white text-lg">O Guia de Motion Graphics</h3><p class="mt-2 text-sm text-slate-400">Como animações podem elevar o nível do seu conteúdo.</p></div></div>
+                <div class="glass-card rounded-2xl overflow-hidden group transition-transform hover:-translate-y-2"><img src="https://placehold.co/600x400/0f172a/38bdf8?text=Estratégia" class="w-full h-40 object-cover"><div class="p-6"><h3 class="font-bold text-white text-lg">Editando para Vender Mais</h3><p class="mt-2 text-sm text-slate-400">A psicologia por trás de um criativo que converte.</p></div></div>
+            </div>
+        </section>
+        
+        <!-- FAQ SECTION -->
+        <section id="faq" class="py-24 max-w-4xl mx-auto reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-white">Perguntas Frequentes</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="glass-card rounded-xl overflow-hidden">
+                    <button class="accordion-header w-full p-6 text-left font-semibold text-white flex justify-between items-center"><span class="text-lg">Quais são seus prazos de entrega?</span><svg class="w-6 h-6 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                    <div class="accordion-content px-6 pb-6"><p class="text-slate-300">O prazo varia com a complexidade do projeto. Vídeos curtos para redes sociais geralmente são entregues em 2-3 dias úteis. Projetos maiores para o YouTube podem levar de 5 a 7 dias. Sempre alinhamos o prazo antes de iniciar.</p></div>
                 </div>
-                <!-- Depoimento 2 -->
-                 <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center">
-                    <img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=MA" alt="Foto de Maria Andrade">
-                    <p class="mt-4 text-slate-300 italic">"Profissionalismo e criatividade incríveis. Entregou um resultado muito acima do esperado e dentro do prazo."</p>
-                    <p class="mt-4 font-bold text-white">Maria Andrade</p>
-                    <p class="text-sm text-slate-400">Agência de Marketing</p>
+                 <div class="glass-card rounded-xl overflow-hidden">
+                    <button class="accordion-header w-full p-6 text-left font-semibold text-white flex justify-between items-center"><span class="text-lg">Como funciona o processo de revisão?</span><svg class="w-6 h-6 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                    <div class="accordion-content px-6 pb-6"><p class="text-slate-300">Cada projeto inclui até duas rodadas de alterações gratuitas para garantir que o resultado final esteja perfeito. O feedback é feito de forma organizada para agilizar o processo.</p></div>
                 </div>
-                <!-- Depoimento 3 -->
-                 <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center">
-                    <img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=CP" alt="Foto de Carlos Pereira">
-                    <p class="mt-4 text-slate-300 italic">"A capacidade de contar uma história através da edição é impressionante. Nossos anúncios nunca converteram tanto."</p>
-                    <p class="mt-4 font-bold text-white">Carlos Pereira</p>
-                    <p class="text-sm text-slate-400">E-commerce de Sucesso</p>
+                 <div class="glass-card rounded-xl overflow-hidden">
+                    <button class="accordion-header w-full p-6 text-left font-semibold text-white flex justify-between items-center"><span class="text-lg">Quais arquivos eu preciso enviar?</span><svg class="w-6 h-6 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                    <div class="accordion-content px-6 pb-6"><p class="text-slate-300">Apenas os arquivos de vídeo brutos (gravados pela câmera), logos, e qualquer outro elemento gráfico ou trilha sonora que você queira incluir. O envio é feito de forma simples através de um link do Google Drive ou WeTransfer.</p></div>
                 </div>
             </div>
         </section>
@@ -210,9 +237,15 @@
             <div class="glass-card rounded-3xl p-12">
                 <h2 class="text-4xl font-bold text-white">Pronto para transformar suas ideias em realidade?</h2>
                 <p class="mt-4 text-lg max-w-2xl mx-auto text-slate-300">Vamos conversar sobre como posso ajudar seu projeto a alcançar o próximo nível.</p>
-                <a href="https://wa.me/5588996117377" target="_blank" class="btn-glow mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg">
-                    Vamos conversar!
-                </a>
+                <div class="my-8 flex flex-col sm:flex-row justify-center items-center gap-6">
+                    <a href="https://wa.me/5588996117377" target="_blank" class="btn-glow inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg w-full sm:w-auto">
+                        Fale comigo agora
+                    </a>
+                    <a href="https://www.instagram.com/ru4neditss" target="_blank" class="flex items-center gap-2 text-slate-300 hover:text-white transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        <span>@ru4neditss</span>
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -220,25 +253,15 @@
 
     <footer class="text-center py-8 text-slate-500">
         <p>&copy; 2024 ru4nedits. Todos os direitos reservados.</p>
+         <div class="mt-4 flex justify-center gap-6">
+             <a href="https://www.instagram.com/ru4neditss" target="_blank" class="hover:text-sky-400 transition">Instagram</a>
+             <a href="#" class="hover:text-sky-400 transition">YouTube</a>
+             <a href="#" class="hover:text-sky-400 transition">TikTok</a>
+         </div>
     </footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Partículas de fundo
-    const particleBg = document.querySelector('.particle-bg');
-    for (let i = 0; i < 20; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        const size = Math.random() * 50 + 10;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.top = `${Math.random() * 100}vh`;
-        particle.style.left = `${Math.random() * 100}vw`;
-        particle.style.animationDuration = `${Math.random() * 15 + 15}s`;
-        particle.style.animationDelay = `${Math.random() * -25}s`;
-        particleBg.appendChild(particle);
-    }
-
     // Animação de entrada ao rolar
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -251,6 +274,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.reveal').forEach(el => {
         revealObserver.observe(el);
+    });
+
+    // Funcionalidade do Accordion (FAQ)
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('svg');
+
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Fecha todos os outros
+                accordionHeaders.forEach(otherHeader => {
+                    otherHeader.nextElementSibling.style.maxHeight = null;
+                    otherHeader.querySelector('svg').style.transform = 'rotate(0deg)';
+                });
+                // Abre o clicado
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+            }
+        });
     });
 });
 </script>
