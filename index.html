@@ -5,597 +5,256 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ru4nedits | Editor de Vídeo Criativo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dark-blue: #0A192F;
-            --primary-blue: #38BDF8;
-            --light-blue: #7DD3FC;
-            --glass-bg: rgba(23, 37, 62, 0.3);
+            --dark-blue: #0F172A; /* slate-900 */
+            --primary-blue: #38BDF8; /* sky-400 */
+            --glass-bg: rgba(30, 41, 59, 0.5); /* slate-800 com 50% opacidade */
             --glass-border: rgba(255, 255, 255, 0.1);
-            --text-color: #e2e8f0;
-            --text-muted-color: #94a3b8;
         }
-
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--dark-blue);
-            color: var(--text-color);
+            color: #e2e8f0; /* slate-200 */
             overflow-x: hidden;
-            cursor: none;
         }
 
-        a, button {
-            cursor: none;
-        }
-
-        /* CUSTOM CURSOR */
-        #custom-cursor {
+        /* Fundo com Partículas */
+        .particle-bg {
             position: fixed;
-            width: 30px;
-            height: 30px;
-            border: 2px solid var(--light-blue);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #cursor-icon {
-            display: none;
-            color: white;
-            transition: opacity 0.3s;
-        }
-        #custom-cursor.video-hover {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(56, 189, 248, 0.2);
-            border-color: var(--primary-blue);
-        }
-         #custom-cursor.video-hover #cursor-icon {
-            display: block;
-        }
-
-        /* DYNAMIC LIQUID BACKGROUND & PARALLAX */
-        .parallax-layer {
-            position: fixed;
-            width: 800px;
-            height: 800px;
-            border-radius: 50%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
             z-index: -1;
-            pointer-events: none;
-            transition: transform 0.2s ease-out;
-            will-change: transform;
+            overflow: hidden;
         }
-        #liquid-cursor {
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.15), transparent 60%);
-            filter: blur(120px);
+        .particle {
+            position: absolute;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 25s infinite ease-in-out;
         }
-        #parallax-bg-1, #parallax-bg-2 {
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        #parallax-bg-1 {
-            background: radial-gradient(circle, rgba(125, 211, 252, 0.05), transparent 70%);
-            filter: blur(150px);
-            top: -20%; left: -10%;
-        }
-        #parallax-bg-2 {
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.08), transparent 70%);
-            filter: blur(100px);
-            bottom: -30%; right: -15%;
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-20vh) translateX(10vw); }
+            100% { transform: translateY(0) translateX(0); }
         }
 
-        /* GLASSMORPHISM CARD STYLE */
+        /* Estilo Glassmorphism */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .glass-card-hover:hover {
-            border-color: rgba(56, 189, 248, 0.4);
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
         
-        /* PORTFOLIO CARD HOVER EFFECT & ANIMATION */
-        .portfolio-card { 
-            will-change: transform; 
-            animation: breathe 8s ease-in-out infinite;
+        /* Botões com Efeito Glow */
+        .btn-glow {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.015); }
+        .btn-glow:hover {
+            box-shadow: 0 0 15px 0px var(--primary-blue);
+            transform: translateY(-2px);
         }
-        .portfolio-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            border-radius: inherit;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.08), transparent 40%);
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        .portfolio-card:hover::before { opacity: 1; }
 
-        /* SCROLLBAR */
+        /* Animações de Entrada */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Wrapper Responsivo para Vídeos */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            width: 100%;
+            border-radius: 0.75rem; /* rounded-xl */
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Scrollbar customizada */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--dark-blue); }
         ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 10px; }
-
-        /* HERO VIDEO BACKGROUND */
-        #hero-video-bg {
-            position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
-            object-fit: cover; transform: translate(-50%, -50%); z-index: -1;
-            filter: blur(15px) brightness(0.3); opacity: 0.6;
-        }
-
-        /* ENTRANCE ANIMATIONS */
-        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 1s, transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        
-        /* CAROUSEL */
-        .carousel-container { scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; }
-        .carousel-item { scroll-snap-align: center; }
-
-        /* MODAL ANIMATION & CONTENT */
-        .modal-content { animation: modal-swoop 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes modal-swoop {
-            from { opacity: 0; transform: translateY(50px) scale(0.9); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .stat-bar { background-color: rgba(56, 189, 248, 0.2); border-radius: 99px; }
-        .stat-bar-inner {
-            background-color: var(--primary-blue);
-            width: 0%;
-            transition: width 1s 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .modal-open .stat-bar-inner { width: var(--stat-width, 0%); }
-        
-        /* WHATSAPP BUTTON LIQUID EFFECT */
-        .whatsapp-button { position: relative; overflow: hidden; }
-        .whatsapp-button span { position: absolute; border-radius: 50%; background: white; transform: scale(0); animation: ripple 0.6s linear; }
-        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
-
-        /* GAMIFICATION BADGE */
-        #badge-toast {
-            transform: translateY(150%);
-            transition: transform 0.5s cubic-bezier(0.215, 0.610, 0.355, 1);
-        }
-        #badge-toast.show {
-            transform: translateY(0);
-        }
-
-        /* SCROLL PROGRESS BAR */
-        #progress-bar {
-            position: fixed;
-            top: 0; left: 0;
-            height: 4px;
-            background-color: var(--primary-blue);
-            width: 0%;
-            z-index: 100;
-            transition: width 0.1s linear;
-        }
     </style>
 </head>
 <body class="min-h-screen">
-    <div id="progress-bar"></div>
-    <div id="custom-cursor">
-        <svg id="cursor-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-    </div>
-    <div id="liquid-cursor" class="parallax-layer"></div>
-    <div id="parallax-bg-1" class="parallax-layer"></div>
-    <div id="parallax-bg-2" class="parallax-layer"></div>
+    <div class="particle-bg"></div>
 
     <!-- HEADER -->
     <header class="fixed top-0 left-0 right-0 z-50 p-4">
         <div class="container mx-auto max-w-7xl">
             <div class="glass-card flex justify-between items-center rounded-2xl px-6 py-3">
-                <a href="#" class="flex items-center gap-3">
-                    <div class="w-8 h-8 flex items-center justify-center">
-                        <svg width="28" height="28" viewBox="0 0 24 24" class="text-sky-300">
-                            <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(-1px); filter: drop-shadow(-1px 0 0 #38BDF8)"/>
-                            <path d="M7 4v16l13-8z" fill="currentColor" style="transform: translateX(1px); filter: drop-shadow(1px 0 0 #0284C7)"/>
-                            <path d="M7 4v16l13-8L7 4z" fill="rgba(224, 242, 254, 0.8)"/>
-                        </svg>
-                    </div>
-                    <span class="text-xl font-bold text-white tracking-tight">ru4nedits</span>
-                </a>
-                <nav class="hidden md:flex items-center gap-6 text-sky-200">
-                    <a href="#portfolio" class="nav-link hover:text-white transition">Portfólio</a>
-                    <a href="#depoimentos" class="nav-link hover:text-white transition">Depoimentos</a>
+                <a href="#" class="text-2xl font-bold text-white tracking-tight">ru4nedits</a>
+                <nav class="hidden md:flex items-center gap-6 text-slate-300">
+                    <a href="#sobre" class="hover:text-white transition">Sobre</a>
+                    <a href="#portfolio" class="hover:text-white transition">Portfólio</a>
+                    <a href="#depoimentos" class="hover:text-white transition">Depoimentos</a>
+                    <a href="#contato" class="hover:text-white transition">Contato</a>
                 </nav>
+                <div class="md:hidden">
+                    <!-- Ícone de Menu para Mobile (funcionalidade pode ser adicionada com JS) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                </div>
             </div>
         </div>
     </header>
 
-    <main>
+    <main class="container mx-auto max-w-7xl px-4 pt-32">
         <!-- HERO SECTION -->
-        <section class="relative min-h-screen flex items-center justify-center text-center p-4 overflow-hidden">
-            <video id="hero-video-bg" playsinline autoplay muted loop src="https://cdn.pixabay.com/video/2022/10/24/135242-763458793_large.mp4"></video>
-            <div class="relative z-10 glass-card rounded-3xl p-8 max-w-4xl reveal">
-                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white to-sky-300">
-                    Edições que transformam. Histórias que conectam.
-                </h1>
-                <p class="mt-6 max-w-2xl mx-auto text-lg text-sky-200">
-                    Transformo vídeos brutos em narrativas impactantes que capturam a atenção e geram resultados.
-                </p>
-                <a href="#portfolio" class="cta-button mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-sky-500/30 transition-all transform hover:scale-105 hover:bg-sky-400">
-                    Veja meu portfólio
-                </a>
-            </div>
+        <section class="min-h-[70vh] flex flex-col items-center justify-center text-center reveal">
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white to-sky-300">
+                Transformo ideias em vídeos que vendem e engajam.
+            </h1>
+            <p class="mt-6 max-w-2xl mx-auto text-lg text-slate-300">
+                Edição de vídeo estratégica para criadores de conteúdo e negócios que buscam resultados reais.
+            </p>
+            <a href="https://wa.me/5588996117377" target="_blank" class="btn-glow mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg">
+                Fale comigo no WhatsApp
+            </a>
+        </section>
+
+        <!-- SOBRE SECTION -->
+        <section id="sobre" class="py-24 reveal">
+             <div class="glass-card rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-12">
+                 <div class="md:w-2/3 text-left">
+                    <h2 class="text-3xl font-bold text-white">Sobre mim</h2>
+                    <p class="mt-4 text-slate-300">Sou um editor de vídeo especialista em transformar conteúdo bruto em narrativas que não apenas capturam a atenção, mas também convertem. Com experiência trabalhando para grandes criadores como <strong class="text-white">Balian</strong>, entendo a linguagem da internet e como criar criativos que geram resultados.</p>
+                    <p class="mt-4 text-slate-300">Meu foco é em edição dinâmica, storytelling e uma estética limpa que eleva a qualidade do seu projeto e fortalece sua marca.</p>
+                 </div>
+                 <div class="md:w-1/3 w-full flex flex-col gap-6">
+                     <div class="glass-card rounded-xl p-4 text-center">
+                        <p class="text-3xl font-bold text-sky-400">+10M</p>
+                        <p class="text-sm text-slate-400">Visualizações Geradas</p>
+                     </div>
+                     <div class="glass-card rounded-xl p-4 text-center">
+                        <p class="text-3xl font-bold text-sky-400">+50</p>
+                        <p class="text-sm text-slate-400">Clientes Satisfeitos</p>
+                     </div>
+                 </div>
+             </div>
         </section>
 
         <!-- PORTFOLIO SECTION -->
-        <section id="portfolio" class="container mx-auto max-w-7xl py-24 px-4">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-5xl font-bold text-white">Portfólio</h2>
-                <p class="mt-4 text-lg text-sky-200">Uma amostra do meu trabalho em ação.</p>
+        <section id="portfolio" class="py-24 reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-white">Portfólio</h2>
+                <p class="mt-4 text-lg text-slate-400">Uma seleção de projetos recentes.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Portfolio items will be injected by JS -->
-            </div>
-        </section>
-
-        <!-- HISTÓRIA ANIMADA SECTION -->
-        <section id="historia" class="container mx-auto max-w-5xl py-24 px-4">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-5xl font-bold text-white">A jornada de um vídeo</h2>
-                <p class="mt-4 text-lg text-sky-200">Veja como uma ideia se transforma em um resultado de impacto.</p>
-            </div>
-            <div class="glass-card rounded-3xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center reveal">
-                <div class="flex md:flex-col justify-around md:justify-start w-full md:w-1/4 gap-4">
-                    <button data-step="1" class="story-step active p-4 rounded-lg text-left glass-card-hover">
-                        <span class="font-bold text-white">1. O Problema</span><span class="text-sm block text-sky-300">Vídeo sem impacto</span>
-                    </button>
-                    <button data-step="2" class="story-step p-4 rounded-lg text-left glass-card-hover">
-                        <span class="font-bold text-white">2. A Edição</span><span class="text-sm block text-sky-300">Mágica acontece</span>
-                    </button>
-                    <button data-step="3" class="story-step p-4 rounded-lg text-left glass-card-hover">
-                        <span class="font-bold text-white">3. O Resultado</span><span class="text-sm block text-sky-300">Engajamento e conversão</span>
-                    </button>
-                </div>
-                <div class="w-full md:w-3/4">
-                    <div id="story-content" class="glass-card rounded-2xl p-6 min-h-[250px] transition-all duration-500">
-                        <!-- Content will be injected by JS -->
-                    </div>
-                </div>
+                <!-- Vídeos incorporados -->
+                <div class="glass-card rounded-2xl p-4 transition-transform hover:-translate-y-2"><div class="video-container"><iframe src="https://www.youtube.com/embed/kX1_rmdGhe4" frameborder="0" allowfullscreen></iframe></div></div>
+                <div class="glass-card rounded-2xl p-4 transition-transform hover:-translate-y-2"><div class="video-container"><iframe src="https://www.youtube.com/embed/gMDAMt-tFo4" frameborder="0" allowfullscreen></iframe></div></div>
+                <div class="glass-card rounded-2xl p-4 transition-transform hover:-translate-y-2"><div class="video-container"><iframe src="https://www.youtube.com/embed/A9uGJAtHZ3U" frameborder="0" allowfullscreen></iframe></div></div>
+                <div class="glass-card rounded-2xl p-4 transition-transform hover:-translate-y-2"><div class="video-container"><iframe src="https://www.youtube.com/embed/fzYXEga_wnE" frameborder="0" allowfullscreen></iframe></div></div>
+                <div class="glass-card rounded-2xl p-4 transition-transform hover:-translate-y-2"><div class="video-container"><iframe src="https://www.youtube.com/embed/5bCEZgA11T0" frameborder="0" allowfullscreen></iframe></div></div>
+                <div class="glass-card rounded-2xl p-4 transition-transform hover:-translate-y-2"><div class="video-container"><iframe src="https://www.youtube.com/embed/Bh-6eIgu83U" frameborder="0" allowfullscreen></iframe></div></div>
             </div>
         </section>
 
         <!-- DEPOIMENTOS SECTION -->
-        <section id="depoimentos" class="py-24">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-5xl font-bold text-white">O que meus clientes dizem</h2>
-                <p class="mt-4 text-lg text-sky-200">Resultados que falam por si.</p>
+        <section id="depoimentos" class="py-24 reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-white">O que meus clientes dizem</h2>
             </div>
-            <div class="relative max-w-7xl mx-auto reveal">
-                <div class="carousel-container flex overflow-x-auto snap-x snap-mandatory gap-8 px-4 pb-8">
-                    <!-- Depoimentos serão injetados aqui -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Depoimento 1 -->
+                <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center">
+                    <img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=JS" alt="Foto de João Silva">
+                    <p class="mt-4 text-slate-300 italic">"A edição do Ruan elevou nosso conteúdo a outro nível. A retenção do público nunca foi tão alta!"</p>
+                    <p class="mt-4 font-bold text-white">João Silva</p>
+                    <p class="text-sm text-slate-400">Criador de Conteúdo</p>
+                </div>
+                <!-- Depoimento 2 -->
+                 <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center">
+                    <img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=MA" alt="Foto de Maria Andrade">
+                    <p class="mt-4 text-slate-300 italic">"Profissionalismo e criatividade incríveis. Entregou um resultado muito acima do esperado e dentro do prazo."</p>
+                    <p class="mt-4 font-bold text-white">Maria Andrade</p>
+                    <p class="text-sm text-slate-400">Agência de Marketing</p>
+                </div>
+                <!-- Depoimento 3 -->
+                 <div class="glass-card rounded-2xl p-6 flex flex-col items-center text-center">
+                    <img class="w-20 h-20 rounded-full object-cover border-2 border-sky-400" src="https://placehold.co/100x100/1e293b/7dd3fc?text=CP" alt="Foto de Carlos Pereira">
+                    <p class="mt-4 text-slate-300 italic">"A capacidade de contar uma história através da edição é impressionante. Nossos anúncios nunca converteram tanto."</p>
+                    <p class="mt-4 font-bold text-white">Carlos Pereira</p>
+                    <p class="text-sm text-slate-400">E-commerce de Sucesso</p>
                 </div>
             </div>
         </section>
+
+        <!-- FINAL CTA SECTION -->
+        <section id="contato" class="py-24 text-center reveal">
+            <div class="glass-card rounded-3xl p-12">
+                <h2 class="text-4xl font-bold text-white">Pronto para transformar suas ideias em realidade?</h2>
+                <p class="mt-4 text-lg max-w-2xl mx-auto text-slate-300">Vamos conversar sobre como posso ajudar seu projeto a alcançar o próximo nível.</p>
+                <a href="https://wa.me/5588996117377" target="_blank" class="btn-glow mt-8 inline-block bg-sky-500 text-white font-semibold py-3 px-8 rounded-full shadow-lg">
+                    Vamos conversar!
+                </a>
+            </div>
+        </section>
+
     </main>
 
-    <!-- FLOATING BUTTONS & NOTIFICATIONS -->
-    <a href="https://wa.me/5588996117377" target="_blank" class="whatsapp-button fixed bottom-6 right-6 z-50 bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.267.655 4.398 1.908 6.161l.114.162-1.217 4.459 4.569-1.195.163.097z"/></svg>
-    </a>
-    <div id="badge-toast" class="fixed bottom-6 left-6 z-50 glass-card rounded-xl p-4 flex items-center gap-4">
-        <span id="badge-icon" class="text-2xl"></span>
-        <div>
-            <p id="badge-title" class="font-bold text-white"></p>
-            <p id="badge-text" class="text-sm text-sky-200"></p>
-        </div>
-    </div>
-    
-    <!-- MODALS -->
-    <div id="portfolio-modal" class="fixed inset-0 z-[60] bg-black/80 flex items-center justify-center p-4 hidden">
-        <div class="modal-content glass-card rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 relative">
-            <button class="modal-close-btn absolute top-4 right-4 text-white text-3xl hover:text-sky-300">&times;</button>
-            <div class="aspect-video mb-4 rounded-lg overflow-hidden bg-black"><iframe id="modal-video" class="w-full h-full" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
-            <h3 id="modal-title" class="text-2xl font-bold text-white mb-2"></h3>
-            <p id="modal-description" class="text-sky-200"></p>
-            <div id="modal-extra-content" class="mt-6">
-                 <!-- Mini timeline and stats will be injected here -->
-            </div>
-        </div>
-    </div>
+    <footer class="text-center py-8 text-slate-500">
+        <p>&copy; 2024 ru4nedits. Todos os direitos reservados.</p>
+    </footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- START AUDIO CONTEXT ON USER INTERACTION ---
-    const startAudio = async () => {
-        if (Tone.context.state !== 'running') {
-            await Tone.start();
-            console.log("Audio context started");
-        }
-        document.documentElement.removeEventListener('mousedown', startAudio);
-        document.documentElement.removeEventListener('keydown', startAudio);
-    };
-    document.documentElement.addEventListener('mousedown', startAudio);
-    document.documentElement.addEventListener('keydown', startAudio);
-
-    // --- IMMERSIVE AUDIO SETUP ---
-    const sounds = {
-        pop: new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: 'sine' },
-            envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.4 },
-            volume: -26
-        }).toDestination(),
-        glitch: new Tone.PolySynth(Tone.NoiseSynth, {
-            noise: { type: 'pink' },
-            envelope: { attack: 0.001, decay: 0.05, sustain: 0 },
-            volume: -21
-        }).toDestination(),
-        swipe: new Tone.PolySynth(Tone.MembraneSynth, {
-             pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.0006, decay: 0.5, sustain: 0 }, volume: -16
-        }).toDestination()
-    };
-    
-    // --- DATA ---
-    const portfolioData = [
-        { id: 'kX1_rmdGhe4', title: 'Head de Tráfego', description: 'Edição dinâmica com foco em conversão, utilizando motion graphics e cortes rápidos para prender a atenção do espectador.', stats: { 'Retenção': 75, 'CTR': 85 } },
-        { id: 'gMDAMt-tFo4', title: 'Vídeo Curto Dinâmico', description: 'Projeto focado em redes sociais, com legendas estilizadas e efeitos sonoros para maximizar o engajamento.', stats: { 'Engajamento': 90, 'Views': 80 } },
-        { id: 'A9uGJAtHZ3U', title: 'Reel Vertical', description: 'Adaptação de conteúdo para o formato vertical, otimizando o enquadramento e adicionando elementos gráficos.', stats: { 'Compartilhamentos': 70, 'Alcance': 88 } },
-        { id: 'fzYXEga_wnE', title: 'Alerta de Golpe', description: 'Vídeo informativo com ritmo acelerado para criar um senso de urgência e clareza na mensagem.', stats: { 'Clareza': 95, 'Impacto': 85 } },
-        { id: '5bCEZgA11T0', title: 'Importância do Advogado', description: 'Edição sóbria e profissional, focada em transmitir autoridade e confiança através de transições suaves.', stats: { 'Confiança': 92, 'Profissionalismo': 98 } },
-        { id: 'Bh-6eIgu83U', title: 'Apresentação de App', description: 'Vídeo de apresentação de produto, combinando captura de tela com animações para explicar funcionalidades.', stats: { 'Compreensão': 80, 'Conversão': 70 } },
-    ];
-    const testimonialsData = [
-        { name: 'Cliente A', feedback: 'O trabalho do Ruan transformou completamente a forma como apresentamos nossos vídeos. A retenção do público aumentou em 40%!', company: 'Startup Inovadora' },
-        { name: 'Cliente B', feedback: 'Profissionalismo e criatividade definem a edição. Entregou um resultado muito acima do esperado e dentro do prazo.', company: 'Agência de Marketing' },
-        { name: 'Cliente C', feedback: 'Incrível a capacidade de contar uma história. Nossos depoimentos agora emocionam e conectam de verdade com a audiência.', company: 'Produtora de Conteúdo' },
-    ];
-    const storyData = {
-        1: { title: 'Análise do Problema', content: 'Recebemos um vídeo bruto com grande potencial, mas sem ritmo, cor e clareza. O desafio é transformá-lo em uma peça que cative desde o primeiro segundo.' },
-        2: { title: 'Processo de Edição Criativa', content: 'Aplicamos cortes dinâmicos, color grading profissional, motion graphics para destacar informações e uma trilha sonora que guia a emoção. Cada detalhe é ajustado.' },
-        3: { title: 'Resultado de Impacto', content: 'O vídeo final não apenas parece profissional, mas performa melhor. Aumento de engajamento, retenção e, o mais importante, conversão para o cliente.' },
-    };
-
-    // --- DYNAMIC CONTENT INJECTION ---
-    const portfolioGrid = document.querySelector('#portfolio .grid');
-    portfolioData.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.dataset.id = item.id;
-        card.className = 'reveal portfolio-card relative glass-card rounded-2xl overflow-hidden glass-card-hover cursor-pointer';
-        card.style.transitionDelay = `${index * 100}ms`;
-        card.style.animationDelay = `${index * 200}ms`;
-        card.innerHTML = `<img src="https://i.ytimg.com/vi/${item.id}/hqdefault.jpg" alt="${item.title}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"><div class="p-4"><h3 class="font-bold text-white text-lg">${item.title}</h3><p class="text-sm text-sky-300 mt-1">Clique para ver detalhes</p></div>`;
-        card.addEventListener('click', () => {
-            vibrate(50);
-            if (Tone.context.state === 'running') sounds.glitch.triggerAttackRelease("8n");
-            openModal('portfolio-modal', item);
-        });
-        portfolioGrid.appendChild(card);
-    });
-    const carouselContainer = document.querySelector('.carousel-container');
-    testimonialsData.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'carousel-item flex-shrink-0 w-[80%] md:w-[45%]';
-        card.innerHTML = `<div class="glass-card rounded-2xl p-8 h-full glass-card-hover"><p class="text-sky-200 italic">“${item.feedback}”</p><div class="mt-4 text-right"><p class="font-bold text-white">${item.name}</p><p class="text-sm text-sky-300">${item.company}</p></div></div>`;
-        carouselContainer.appendChild(card);
-    });
-
-    // --- MODAL LOGIC ---
-    const portfolioModal = document.getElementById('portfolio-modal');
-    function openModal(modalId, data) {
-        const modal = document.getElementById(modalId);
-        if (modalId === 'portfolio-modal' && data) {
-            modal.querySelector('#modal-video').src = `https://www.youtube.com/embed/${data.id}?autoplay=1`;
-            modal.querySelector('#modal-title').textContent = data.title;
-            modal.querySelector('#modal-description').textContent = data.description;
-            
-            const extraContent = modal.querySelector('#modal-extra-content');
-            extraContent.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h4 class="font-semibold text-white mb-3">Evolução do Projeto</h4>
-                        <ol class="relative border-l border-sky-700">                  
-                            <li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-400 rounded-full mt-1.5 -left-1.5"></div><h5 class="font-semibold text-white">Briefing</h5><p class="text-sm text-sky-200">Análise do material bruto.</p></li>
-                            <li class="mb-6 ml-4"><div class="absolute w-3 h-3 bg-sky-400 rounded-full mt-1.5 -left-1.5"></div><h5 class="font-semibold text-white">Edição</h5><p class="text-sm text-sky-200">Cortes, cor e efeitos.</p></li>
-                            <li class="ml-4"><div class="absolute w-3 h-3 bg-sky-400 rounded-full mt-1.5 -left-1.5"></div><h5 class="font-semibold text-white">Resultado</h5><p class="text-sm text-sky-200">Vídeo finalizado e otimizado.</p></li>
-                        </ol>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-white mb-3">Métricas de Sucesso</h4>
-                        ${Object.entries(data.stats).map(([key, value]) => `
-                            <div class="mb-2">
-                                <span class="text-sm font-medium text-sky-200">${key}</span>
-                                <div class="w-full stat-bar mt-1">
-                                    <div class="stat-bar-inner h-2 rounded-full" style="--stat-width: ${value}%;"></div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>`;
-        }
-        modal.classList.remove('hidden');
-        document.body.classList.add('modal-open');
+    // Partículas de fundo
+    const particleBg = document.querySelector('.particle-bg');
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        const size = Math.random() * 50 + 10;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.top = `${Math.random() * 100}vh`;
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.animationDuration = `${Math.random() * 15 + 15}s`;
+        particle.style.animationDelay = `${Math.random() * -25}s`;
+        particleBg.appendChild(particle);
     }
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modalId === 'portfolio-modal') modal.querySelector('#modal-video').src = "";
-        modal.classList.add('hidden');
-        document.body.classList.remove('modal-open');
-    }
-    document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.fixed').id)));
-    portfolioModal.addEventListener('click', e => {
-        if (e.target === portfolioModal) closeModal(portfolioModal.id);
-    });
 
-    // --- REVEAL ON SCROLL & SCROLL REACTIONS ---
+    // Animação de entrada ao rolar
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                const animatedStat = entry.target.querySelector('.animated-stat');
-                if (animatedStat) animateStat(animatedStat);
                 revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.2 });
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-    
-    // --- ANIMATED STATS ---
-    function animateStat(element) {
-        const target = +element.dataset.target;
-        let count = 0;
-        const duration = 1500;
-        const stepTime = Math.abs(Math.floor(duration / target));
-        const timer = setInterval(() => {
-            count++;
-            element.innerText = count;
-            if (count === target) clearInterval(timer);
-        }, stepTime);
-    }
-    
-    // --- SENSORY FEEDBACK (VIBRATION) ---
-    const vibrate = (duration = 50) => {
-        if (navigator.vibrate) {
-            navigator.vibrate(duration);
-        }
-    };
-    
-    // --- DYNAMIC INTERACTIONS (PARALLAX, CURSOR) ---
-    const parallaxLayers = document.querySelectorAll('.parallax-layer');
-    const customCursor = document.getElementById('custom-cursor');
-    const isTouchDevice = 'ontouchstart' in window;
+    }, { threshold: 0.1 });
 
-    if (isTouchDevice) {
-        customCursor.style.display = 'none';
-    }
-
-    const handleMouseMove = (e) => {
-        const x = e.clientX;
-        const y = e.clientY;
-        const xMid = x - window.innerWidth / 2;
-        const yMid = y - window.innerHeight / 2;
-
-        customCursor.style.left = `${x}px`;
-        customCursor.style.top = `${y}px`;
-
-        parallaxLayers[0].style.transform = `translate(${xMid / 20}px, ${yMid / 20}px)`;
-        parallaxLayers[1].style.transform = `translate(${xMid / 80}px, ${yMid / 80}px)`;
-        parallaxLayers[2].style.transform = `translate(${xMid / 40}px, ${yMid / 40}px)`;
-    };
-
-    const handleOrientation = (e) => {
-        const gamma = e.gamma; // left-to-right tilt
-        const beta = e.beta;   // front-to-back tilt
-        const x = gamma * 4;
-        const y = beta * 4;
-        parallaxLayers[0].style.transform = `translate(${x / 20}px, ${y / 20}px)`;
-        parallaxLayers[1].style.transform = `translate(${x / 80}px, ${y / 80}px)`;
-        parallaxLayers[2].style.transform = `translate(${x / 40}px, ${y / 40}px)`;
-    };
-
-    const requestOrientationPermission = () => {
-        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-            DeviceOrientationEvent.requestPermission()
-                .then(permissionState => {
-                    if (permissionState === 'granted') {
-                        window.addEventListener('deviceorientation', handleOrientation);
-                    }
-                })
-                .catch(console.error);
-        } else {
-            window.addEventListener('deviceorientation', handleOrientation);
-        }
-        document.body.removeEventListener('touchstart', requestOrientationPermission);
-    };
-
-    if (isTouchDevice) {
-        document.body.addEventListener('touchstart', requestOrientationPermission, { once: true });
-    } else {
-        window.addEventListener('mousemove', handleMouseMove);
-    }
-    
-    document.querySelectorAll('.portfolio-card').forEach(card => {
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
-        });
-        card.addEventListener('mouseenter', () => {
-            customCursor.classList.add('video-hover');
-            if(Tone.context.state === 'running') sounds.pop.triggerAttackRelease("C4", "8n");
-        });
-        card.addEventListener('mouseleave', () => customCursor.classList.remove('video-hover'));
-    });
-
-    document.querySelectorAll('.nav-link, .cta-button, .story-step, .whatsapp-button').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-             if(Tone.context.state === 'running') sounds.swipe.triggerAttackRelease("C2", "8n");
-        });
-        el.addEventListener('click', () => vibrate(30));
-    });
-
-    document.querySelector('.whatsapp-button').addEventListener('click', function(e) {
-        let ripple = document.createElement("span"); this.appendChild(ripple);
-        let x = e.clientX - e.target.offsetLeft; let y = e.clientY - e.target.offsetTop;
-        ripple.style.left = `${x}px`; ripple.style.top = `${y}px`;
-        setTimeout(() => { ripple.remove(); }, 600);
-    });
-
-    // --- ANIMATED STORY SECTION ---
-    const storySteps = document.querySelectorAll('.story-step');
-    const storyContentEl = document.getElementById('story-content');
-    function updateStoryContent(step) {
-        const data = storyData[step];
-        storyContentEl.innerHTML = `<h3 class="text-2xl font-bold text-white mb-2">${data.title}</h3><p class="text-sky-200">${data.content}</p>`;
-        storySteps.forEach(s => s.classList.remove('active', 'bg-sky-500/20'));
-        document.querySelector(`.story-step[data-step="${step}"]`).classList.add('active', 'bg-sky-500/20');
-    }
-    storySteps.forEach(step => step.addEventListener('click', () => updateStoryContent(step.dataset.step)));
-    updateStoryContent(1);
-
-    // --- GAMIFICATION ---
-    const hoveredCards = new Set();
-    const badgeToast = document.getElementById('badge-toast');
-    let explorerBadgeUnlocked = false;
-    
-    function showBadge(type) {
-        if (type === 'explorer' && !explorerBadgeUnlocked) {
-            badgeToast.querySelector('#badge-icon').innerHTML = '🧭';
-            badgeToast.querySelector('#badge-title').innerText = 'Explorador';
-            badgeToast.querySelector('#badge-text').innerText = 'Você explorou todos os projetos!';
-            explorerBadgeUnlocked = true;
-            badgeToast.classList.add('show');
-            setTimeout(() => badgeToast.classList.remove('show'), 4000);
-        }
-    }
-    
-    document.querySelectorAll('.portfolio-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            hoveredCards.add(card.dataset.id);
-            if (hoveredCards.size === portfolioData.length) {
-                showBadge('explorer');
-            }
-        });
-    });
-    
-    // --- SCROLL PROGRESS ---
-    const progressBar = document.getElementById('progress-bar');
-    window.addEventListener('scroll', () => {
-        const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-        progressBar.style.width = `${scrollPercent}%`;
+    document.querySelectorAll('.reveal').forEach(el => {
+        revealObserver.observe(el);
     });
 });
 </script>
 
 </body>
 </html>
-
 
